@@ -85,10 +85,18 @@ npm install eslint prettier @typescript-eslint/parser @typescript-eslint/eslint-
 npm install morgan
 ```
 
+```bash
+npm i --save-dev @types/morgan
+```
+
 ### 8. Security
 
 ```bash
 npm install helmet cors
+```
+
+```bash
+  npm i --save-dev @types/cors @types/helmet
 ```
 
 ### 9. Database Integration
@@ -113,6 +121,24 @@ npm install @types/mongoose --save-dev
     }
     // ...
 }
+```
+
+### 11. To start the project in development mode, use the following
+
+```bash
+  npm run devserver
+```
+
+### 12. Build the Project
+
+```bash
+npm run build
+```
+
+### 13. To start the production-ready server using the compiled files:
+
+```bash
+npm start
 ```
 
 ## Folder Structure

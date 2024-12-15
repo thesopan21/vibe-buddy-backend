@@ -10,19 +10,20 @@
       "sourceMap": true,
       "outDir": "./dist",
       "rootDir": "./src",
-      "baseUrl": ".",
+      "baseUrl": ".", // Root directory for absolute paths
       "paths": {
           "*": [
               "node_modules/*",
               "src/types/*"
             ],
-          "@utils/*": ["src/utils/*"]
+          "@utils/*": ["src/utils/*"],
+          "src/*": ["src/*"] // Map 'src/' to your actual 'src' folder
       }
   },
   "include": [
       "src/**/*",
       "src/**/*.ts",
       "src/utils/*"
-  ],
+, "server.ts"  ],
   "exclude": ["node_modules"]
 }
