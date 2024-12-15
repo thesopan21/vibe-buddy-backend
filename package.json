@@ -1,0 +1,29 @@
+{
+  "name": "ts-production-setup",
+  "version": "1.0.0",
+  "description": "production-ready backend with Node.js and TypeScript",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thesopan21/node-ts-production-setup.git"
+  },
+  "keywords": [
+    "production",
+    "template",
+    "backend-boilerplate-ts",
+    "node-ts-production-setup",
+    "prod-ready-backend-ts",
+    "professional-backend-ts",
+    "professional",
+    "typescript-backend"
+  ],
+  "author": "thesopan21",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thesopan21/node-ts-production-setup/issues"
+  },
+  "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme"
+}
