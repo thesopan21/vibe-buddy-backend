@@ -28,7 +28,10 @@
   },
   "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
