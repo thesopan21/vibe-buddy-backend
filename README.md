@@ -26,7 +26,7 @@ npx tsc --init
 
 ### 4. Update `tsconfig.json`
 
-- [official doc](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+- [official doc](https://www.typescriptlang.org/tsconfig/)
 - [example](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
 
 ```bash
