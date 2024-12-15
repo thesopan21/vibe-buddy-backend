@@ -5,7 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "devserver": "node --import=tsx --watch --env-file=.env server.ts"
   },
   "repository": {
     "type": "git",
