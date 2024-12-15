@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "production-ready backend with Node.js and TypeScript",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,5 +26,14 @@
   "bugs": {
     "url": "https://github.com/thesopan21/node-ts-production-setup/issues"
   },
-  "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme"
+  "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
 }
