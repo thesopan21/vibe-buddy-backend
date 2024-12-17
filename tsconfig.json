@@ -17,7 +17,7 @@
               "src/types/*"
             ],
           "@utils/*": ["src/utils/*"],
-          "src/*": ["src/*"] // Map 'src/' to your actual 'src' folder
+          "src/*": ["src/*"]
       }
   },
   "include": [
