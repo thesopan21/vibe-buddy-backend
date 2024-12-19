@@ -1,5 +1,7 @@
-import connectToMongodb from "src/model/userModel";
-import app from "./src/app";
+import app from "./app";
+import connectToMongodb from "./config/database";
+
+
 
 const PORT = process.env.PORT || 3000;
 

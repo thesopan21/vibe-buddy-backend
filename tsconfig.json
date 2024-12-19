@@ -1,29 +1,35 @@
 {
   "compilerOptions": {
-      "module": "ES6",
-      "strict": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "target": "es6",
-      "noImplicitAny": true,
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "baseUrl": ".", // Root directory for absolute paths
-      "paths": {
-          "*": [
-              "node_modules/*",
-              "src/types/*"
-            ],
-          "@utils/*": ["src/utils/*"],
-          "src/*": ["src/*"]
-      }
+    "module": "ES6",
+    "target": "ES6",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "src/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
-      "src/**/*",
-      "src/**/*.ts",
-      "src/utils/*"
-, "server.ts"  ],
-  "exclude": ["node_modules"]
+    "src/**/*",
+    "src/utils/*",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

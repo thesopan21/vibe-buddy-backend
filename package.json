@@ -2,12 +2,12 @@
   "name": "ts-production-setup",
   "version": "1.0.0",
   "description": "production-ready backend with Node.js and TypeScript",
-  "main": "server.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "devserver": "node --import=tsx --watch --env-file=.env server.ts"
+    "dev": "tsx watch ./src/server.ts"
   },
   "repository": {
     "type": "git",
