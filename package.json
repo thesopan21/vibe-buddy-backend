@@ -2,12 +2,15 @@
   "name": "ts-production-setup",
   "version": "1.0.0",
   "description": "production-ready backend with Node.js and TypeScript",
-  "main": "dist/server.js",
-  "type": "module",
+  "main": "server.js",
   "scripts": {
     "start": "node dist/server.js",
+    "clean": "rm -rf dist",
     "build": "tsc",
-    "dev": "tsx watch ./src/server.ts"
+    "dev": "tsx watch ./src/server.ts",
+    "start:prod": "node dist/server.js",
+    "tsc:check": "tsc --noEmit",
+    "env:check": "node -r dotenv/config -e \"console.log('Environment variables loaded successfully.')\""
   },
   "repository": {
     "type": "git",
@@ -31,6 +34,7 @@
   "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "mongoose": "^8.9.1",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
     "@types/helmet": "^0.0.48",
     "@types/mongoose": "^5.11.96",

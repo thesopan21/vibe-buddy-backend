@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ES6",
+    "module": "CommonJS",
     "target": "ES6",
     "noImplicitAny": true,
     "removeComments": true,
@@ -27,7 +27,6 @@
   },
   "include": [
     "src/**/*",
-    "src/utils/*",
   ],
   "exclude": [
     "node_modules"
