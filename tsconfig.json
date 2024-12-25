@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "ES6",
+    "target": "ES2016",
     "noImplicitAny": true,
     "removeComments": true,
     "strict": true,
@@ -11,24 +11,6 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "baseUrl": ".",
-    "moduleResolution": "node",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
-      "src/*": [
-        "src/*"
-      ]
-    }
   },
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "moduleSuffixes": [".js", ".ts"]
 }

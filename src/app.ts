@@ -10,8 +10,9 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 
-// routes
 app.use(express.json());
-app.use('/api', userRoutes);
+
+// routes
+app.use('/api/v1', userRoutes);
 
 export default app;
