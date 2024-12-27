@@ -1,5 +1,5 @@
+import environmentVariable from "@/utils/processEnvVaribale";
 import mongoose from "mongoose";
-import environmentVariable from "src/utils/processEnvVaribale";
 
 const DB_URL = environmentVariable.DB_URI || "mongodb://127.0.0.1:27017/test_db";
 

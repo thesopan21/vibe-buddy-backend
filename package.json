@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "clean": "rm -rf dist",
-    "build": "tsc",
-    "dev": "tsx watch ./src/server.ts",
+    "build": "tsc && tsc-alias",
+    "dev": "tsx watch -r tsconfig-paths/register ./src/server.ts",
     "start:prod": "node dist/server.js",
     "tsc:check": "tsc --noEmit",
     "env:check": "node -r dotenv/config -e \"console.log('Environment variables loaded successfully.')\""
@@ -54,6 +54,7 @@
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
