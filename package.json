@@ -1,8 +1,9 @@
 {
-  "name": "ts-production-setup",
+  "name": "vibe-buddy",
   "version": "1.0.0",
   "description": "production-ready backend with Node.js and TypeScript",
   "main": "server.js",
+  "private": "true",
   "scripts": {
     "start": "node dist/server.js",
     "clean": "rm -rf dist",
@@ -14,24 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thesopan21/node-ts-production-setup.git"
+    "url": "git+https://github.com/thesopan21/vibe-buddy-backend.git"
   },
-  "keywords": [
-    "production",
-    "template",
-    "backend-boilerplate-ts",
-    "node-ts-production-setup",
-    "prod-ready-backend-ts",
-    "professional-backend-ts",
-    "professional",
-    "typescript-backend"
-  ],
+  "keywords": [],
   "author": "thesopan21",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thesopan21/node-ts-production-setup/issues"
+    "url": "https://github.com/thesopan21/vibe-buddy-backend/issues"
   },
-  "homepage": "https://github.com/thesopan21/node-ts-production-setup#readme",
+  "homepage": "https://github.com/thesopan21/vibe-buddy-backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
