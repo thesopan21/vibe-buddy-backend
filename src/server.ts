@@ -1,9 +1,9 @@
 import app from "./app";
 import connectToMongodb from "./config/database";
+import { PORT } from "./utils/processEnvVaribale";
 
 
 
-const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   connectToMongodb()

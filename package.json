@@ -1,17 +1,13 @@
 {
   "name": "vibe-buddy",
   "version": "1.0.0",
-  "description": "production-ready backend with Node.js and TypeScript",
+  "description": "Production-Ready backend with Express and TypeScript for Vibe Buddy",
   "main": "server.js",
   "private": "true",
   "scripts": {
     "start": "node dist/server.js",
-    "clean": "rm -rf dist",
     "build": "tsc && tsc-alias",
-    "dev": "tsx watch -r tsconfig-paths/register ./src/server.ts",
-    "start:prod": "node dist/server.js",
-    "tsc:check": "tsc --noEmit",
-    "env:check": "node -r dotenv/config -e \"console.log('Environment variables loaded successfully.')\""
+    "dev": "tsx watch -r tsconfig-paths/register ./src/server.ts"
   },
   "repository": {
     "type": "git",
