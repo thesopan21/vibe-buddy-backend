@@ -1,8 +1,9 @@
-import { greetingController } from '@/controllers/userController';
+import { creatNewUserController, greetingController } from '@/controllers/userController';
 import { Router } from 'express';
 
-const router = Router();
+const userRoutes = Router();
 
-const userRoutes = router.get('/users', greetingController);
+userRoutes.get('/', greetingController);
+userRoutes.post('/create', creatNewUserController)
 
 export default userRoutes;
