@@ -1,4 +1,5 @@
 import UserModel from "@/model/userModel";
+import { CreateNewUserRequestBody } from "@/types/userTypes";
 import { Request, Response } from "express";
 
 export const greetingController = (req: Request, res: Response) => {
@@ -7,7 +8,7 @@ export const greetingController = (req: Request, res: Response) => {
 
 /**
  * Register a new user.
- * 
+ *
  * @param {Object} req - The request object from the client.
  * @param {Object} req.body - The body of the request containing the user data.
  * @param {string} req.body.username - The username of the new user.
@@ -20,9 +21,13 @@ export const greetingController = (req: Request, res: Response) => {
  * @route   POST: /api/v1/user/register
  * @access  Public
  */
-export const creatNewUserController = async (req, res) => {
+export const creatNewUserController = async (
+  req: CreateNewUserRequestBody,
+  res: any
+) => {
   try {
     const { email, name, password } = req.body;
+    // validate the request body before saving into db
 
     // create and save new user inside db
     const newUser = await new UserModel({
