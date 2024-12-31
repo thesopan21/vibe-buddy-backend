@@ -44,17 +44,15 @@ npx tsc --init
         "rootDir": "./src"
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "node_modules/*",
-                "src/types/*"
+            "@/*": [
+                "./node_modules/*",
+                "./src/*"
               ],
-            "@utils/*": ["src/utils/*"]
         }
     },
     "include": [
-        "src/**/*",
-        "src/**/*.ts",
-        "src/utils/*"
+        "./src/**/*",
+        "./src/**/*.ts",
     ],
     "exclude": ["node_modules"]
 }
