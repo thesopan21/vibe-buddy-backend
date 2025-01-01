@@ -1,6 +1,6 @@
 import UserModel from "@/model/userModel";
 import { CreateNewUserRequestBody } from "@/types/userTypes";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -21,13 +21,12 @@ export const greetingController = (req: Request, res: Response) => {
  * @route   POST: /api/v1/user/register
  * @access  Public
  */
-export const creatNewUserController = async (
+export const creatNewUserController:RequestHandler = async (
   req: CreateNewUserRequestBody,
   res: any
 ) => {
   try {
     const { email, name, password } = req.body;
-    // validate the request body before saving into db
 
     // create and save new user inside db
     const newUser = await new UserModel({
@@ -36,10 +35,10 @@ export const creatNewUserController = async (
       password,
     });
 
-    return res.json({ newUser });
+    return res.status(201).json({ newUser });
   } catch (error) {
     console.log("Error while creating new User!");
-    return res.json({
+    return res.status(500).json({
       message: "Error while creating new user!",
     });
   }

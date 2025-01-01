@@ -4,7 +4,7 @@ import { object, ValidationError } from "yup";
 export const schemaValidatorMiddleware = (schema: any): RequestHandler => {
   return async (req, res, next) => {
     if (!req.body) {
-      res.json({
+      res.status(422).json({
         error: "request body is empty!",
       });
     }
@@ -25,7 +25,7 @@ export const schemaValidatorMiddleware = (schema: any): RequestHandler => {
       next();
     } catch (error) {
       if (error instanceof ValidationError) {
-        res.json({
+        res.status(422).json({
           error: error.message
         })
       }
