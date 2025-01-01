@@ -11,14 +11,9 @@ interface EnvironmentVarible {
 
 const { env } = process as EnvironmentVarible;
 
-export const MONGO_DB_URI = env.DB_URI;
-export const PORT = env.PORT;
-
-/**
-const processEnvironmentVariable = () => {
-  return process.env;
-};
-
-const environmentVariable = processEnvironmentVariable();
-export default environmentVariable;
-*/
+export const { 
+  PORT, 
+  MONGO_DB_URI,
+  MAILTRAP_USERNAME,
+  MAILTRAP_PASSWORD,
+} = env;

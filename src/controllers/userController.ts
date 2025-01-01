@@ -1,6 +1,8 @@
 import UserModel from "@/model/userModel";
 import { CreateNewUserRequestBody } from "@/types/userTypes";
+import { MAILTRAP_PASSWORD, MAILTRAP_USERNAME } from "@/utils/processEnvVaribale";
 import { Request, RequestHandler, Response } from "express";
+import nodemailer from "nodemailer";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -21,7 +23,7 @@ export const greetingController = (req: Request, res: Response) => {
  * @route   POST: /api/v1/user/register
  * @access  Public
  */
-export const creatNewUserController:RequestHandler = async (
+export const creatNewUserController: RequestHandler = async (
   req: CreateNewUserRequestBody,
   res: any
 ) => {
@@ -34,6 +36,22 @@ export const creatNewUserController:RequestHandler = async (
       email,
       password,
     });
+
+    // send email for varification
+    const transport = nodemailer.createTransport({
+      host: "sandbox.smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: MAILTRAP_USERNAME,
+        pass: MAILTRAP_PASSWORD,
+      },
+    });
+
+    transport.sendMail({
+      to: newUser.email,
+      from: 'sbussiness21@gmail.com',
+      html:"<h1>123456</h1>"
+    })
 
     return res.status(201).json({ newUser });
   } catch (error) {
