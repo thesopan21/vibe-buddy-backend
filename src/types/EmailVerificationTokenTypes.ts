@@ -9,3 +9,12 @@ export interface EmailVerificationTokenModelDocument {
 export interface Methods {
   compareToken(token: string): Promise<boolean>;
 }
+
+export interface TemplateDetails {
+  title: string;
+  message: string;
+  link: string;
+  logo: string;
+  banner: string;
+  btnTitle: string;
+}
