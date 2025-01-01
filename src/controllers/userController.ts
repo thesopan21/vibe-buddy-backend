@@ -1,6 +1,11 @@
+import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 import UserModel from "@/model/userModel";
 import { CreateNewUserRequestBody } from "@/types/userTypes";
-import { MAILTRAP_PASSWORD, MAILTRAP_USERNAME } from "@/utils/processEnvVaribale";
+import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
+import {
+  MAILTRAP_PASSWORD,
+  MAILTRAP_USERNAME,
+} from "@/utils/processEnvVaribale";
 import { Request, RequestHandler, Response } from "express";
 import nodemailer from "nodemailer";
 
@@ -47,11 +52,23 @@ export const creatNewUserController: RequestHandler = async (
       },
     });
 
+    // generate token for emial verification
+    const otpToken = generateEmailVerificationToken();
+
+    // save token into db for verification purpose
+    await EmailVerificationTokenModel.create({
+      otpToken,
+      woner: newUser._id,
+    });
+
     transport.sendMail({
       to: newUser.email,
-      from: 'sbussiness21@gmail.com',
-      html:"<h1>123456</h1>"
-    })
+      from: "sbussiness21@gmail.com",
+      html: `
+      <h1>Your verification OTP is ${otpToken}.</h1>
+      <h5>Do not share your otp with unknown!</h5>
+      `,
+    });
 
     return res.status(201).json({ newUser });
   } catch (error) {

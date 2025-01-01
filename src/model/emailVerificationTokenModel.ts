@@ -16,7 +16,7 @@ const emailVerificationTokenSchema =
       createdAt: {
         type: Date,
         expires: 600,
-        default: Date.now()
+        default: Date.now(),
       },
     },
     {
