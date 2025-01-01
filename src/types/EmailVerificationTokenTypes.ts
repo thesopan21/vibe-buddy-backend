@@ -5,3 +5,7 @@ export interface EmailVerificationTokenModelDocument {
   token: string;
   createdAt: Date;
 }
+
+export interface Methods {
+  compareToken(token: string): Promise<boolean>;
+}

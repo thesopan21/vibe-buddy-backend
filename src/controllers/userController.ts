@@ -57,7 +57,7 @@ export const creatNewUserController: RequestHandler = async (
 
     // save token into db for verification purpose
     await EmailVerificationTokenModel.create({
-      otpToken,
+      token: otpToken,
       woner: newUser._id,
     });
 
@@ -72,7 +72,7 @@ export const creatNewUserController: RequestHandler = async (
 
     return res.status(201).json({ newUser });
   } catch (error) {
-    console.log("Error while creating new User!");
+    console.log("Error while creating new User!", error);
     return res.status(500).json({
       message: "Error while creating new user!",
     });
