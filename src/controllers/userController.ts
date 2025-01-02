@@ -1,6 +1,7 @@
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 import UserModel from "@/model/userModel";
 import { CreateNewUserRequestBody } from "@/types/userTypes";
+import { generateTemplate } from "@/utils/emailTemplate";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
 import {
   MAILTRAP_PASSWORD,
@@ -8,6 +9,7 @@ import {
 } from "@/utils/processEnvVaribale";
 import { Request, RequestHandler, Response } from "express";
 import nodemailer from "nodemailer";
+import path from "path";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -60,14 +62,31 @@ export const creatNewUserController: RequestHandler = async (
       token: otpToken,
       woner: newUser._id,
     });
-
+    
     transport.sendMail({
       to: newUser.email,
       from: "sbussiness21@gmail.com",
-      html: `
-      <h1>Your verification OTP is ${otpToken}.</h1>
-      <h5>Do not share your otp with unknown!</h5>
-      `,
+      subject:"Email Verification",
+      html: generateTemplate({
+        title: "Welcome to Vibe Buddy",
+        userName: name,
+        banner: "cid:welcome",
+        logo: "cid:logo",
+        btnTitle: otpToken,
+        link: "#",
+      }),
+      attachments:[
+        {
+          filename:'vibeBuddyLogo1.png',
+          path: path.join(__dirname, "../assets/images/vibeBuddyLogo1.png"),
+          cid:'logo'
+        },
+        {
+          filename:'emailWelcomeBanner.png',
+          path: path.join(__dirname, '../assets/images/emailWelcomeBanner.png'),
+          cid:'welcome'
+        }
+      ]
     });
 
     return res.status(201).json({ newUser });
