@@ -1,15 +1,9 @@
-import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
+
 import UserModel from "@/model/userModel";
 import { CreateNewUserRequestBody } from "@/types/userTypes";
-import { generateTemplate } from "@/utils/emailTemplate";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
-import {
-  MAILTRAP_PASSWORD,
-  MAILTRAP_USERNAME,
-} from "@/utils/processEnvVaribale";
 import { Request, RequestHandler, Response } from "express";
-import nodemailer from "nodemailer";
-import path from "path";
+import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -44,52 +38,23 @@ export const creatNewUserController: RequestHandler = async (
       password,
     });
 
-    // send email for varification
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: MAILTRAP_USERNAME,
-        pass: MAILTRAP_PASSWORD,
-      },
-    });
-
     // generate token for emial verification
     const otpToken = generateEmailVerificationToken();
 
-    // save token into db for verification purpose
-    await EmailVerificationTokenModel.create({
-      token: otpToken,
-      woner: newUser._id,
-    });
-    
-    transport.sendMail({
-      to: newUser.email,
-      from: "sbussiness21@gmail.com",
-      subject:"Email Verification",
-      html: generateTemplate({
-        title: "Welcome to Vibe Buddy",
-        userName: name,
-        banner: "cid:welcome",
-        logo: "cid:logo",
-        btnTitle: otpToken,
-        link: "#",
-      }),
-      attachments:[
-        {
-          filename:'vibeBuddyLogo1.png',
-          path: path.join(__dirname, "../assets/images/vibeBuddyLogo1.png"),
-          cid:'logo'
-        },
-        {
-          filename:'emailWelcomeBanner.png',
-          path: path.join(__dirname, '../assets/images/emailWelcomeBanner.png'),
-          cid:'welcome'
-        }
-      ]
+    // send email for varification
+    await sendVerificationEmail({
+      email:newUser.email,
+      otpToken,
+      userId: newUser._id.toString(),
+      userName: newUser.name,
     });
 
-    return res.status(201).json({ newUser });
+    // send the api response
+    return res.status(201).json({
+      id: newUser._id,
+      userName: newUser.name,
+      email,
+    });
   } catch (error) {
     console.log("Error while creating new User!", error);
     return res.status(500).json({

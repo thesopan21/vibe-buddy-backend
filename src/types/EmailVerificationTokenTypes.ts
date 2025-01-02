@@ -18,3 +18,10 @@ export interface TemplateDetails {
   banner: string;
   btnTitle: string;
 }
+
+export interface UserProfile {
+  otpToken: string;
+  userName: string;
+  email: string;
+  userId: string;
+}
