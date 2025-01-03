@@ -33,7 +33,7 @@ const emailVerificationTokenSchema = new Schema<
 
 // hash otp token before saving into db
 emailVerificationTokenSchema.pre("save", async function (next) {
-  if (this.isModified(this.token)) {
+  if (this.isModified("token")) {
     this.token = await hash(this.token, 10);
   }
   next();

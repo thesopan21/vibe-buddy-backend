@@ -32,7 +32,7 @@ export const creatNewUserController: RequestHandler = async (
     const { email, name, password } = req.body;
 
     // create and save new user inside db
-    const newUser = await new UserModel({
+    const newUser = await UserModel.create({
       name,
       email,
       password,

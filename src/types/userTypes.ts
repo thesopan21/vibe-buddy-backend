@@ -25,3 +25,7 @@ interface RequestBody {
 export interface CreateNewUserRequestBody extends Request {
   body: RequestBody;
 }
+
+export interface Methods {
+  validatePassword(password: string): Promise<boolean>;
+}

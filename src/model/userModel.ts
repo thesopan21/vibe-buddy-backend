@@ -1,7 +1,8 @@
-import { UserDocument } from "@/types/userTypes";
+import { Methods, UserDocument } from "@/types/userTypes";
+import { compare, hash } from "bcrypt";
 import { Model, model, Schema } from "mongoose";
 
-const userSchema = new Schema<UserDocument>(
+const userSchema = new Schema<UserDocument, {}, Methods>(
   {
     name: {
       type: String,
@@ -52,6 +53,19 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
+userSchema.pre("save", async function (next) {
+  // hash password 
+  if (this.isModified("password")) {
+    this.password = await hash(this.password, 10);
+  }
 
-const UserModel = model("User", userSchema) as Model<UserDocument>;
+  next();
+});
+
+userSchema.methods.validatePassword = async function (password) {
+  const isValidPassword = await compare(password, this.password);
+  return isValidPassword;
+};
+
+const UserModel = model("User", userSchema) as Model<UserDocument, {}, Methods>;
 export default UserModel;
