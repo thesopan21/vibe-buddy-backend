@@ -1,9 +1,10 @@
 import { ObjectId } from "mongoose";
 
 export interface EmailVerificationTokenModelDocument {
-  woner: ObjectId;
+  owner: ObjectId;
   token: string;
   createdAt: Date;
+  isEmailVerified?:boolean
 }
 
 export interface Methods {

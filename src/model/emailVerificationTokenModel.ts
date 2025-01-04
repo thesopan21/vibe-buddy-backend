@@ -4,6 +4,7 @@ import {
 } from "@/types/EmailVerificationTokenTypes";
 import { compare, hash } from "bcrypt";
 import { Model, model, ObjectId, Schema } from "mongoose";
+import { boolean } from "yup";
 
 const emailVerificationTokenSchema = new Schema<
   EmailVerificationTokenModelDocument,
@@ -11,7 +12,7 @@ const emailVerificationTokenSchema = new Schema<
   Methods
 >(
   {
-    woner: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -24,6 +25,10 @@ const emailVerificationTokenSchema = new Schema<
       type: Date,
       expires: 600,
       default: Date.now(),
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {

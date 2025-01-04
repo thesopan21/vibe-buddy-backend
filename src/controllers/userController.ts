@@ -1,9 +1,12 @@
-
 import UserModel from "@/model/userModel";
-import { CreateNewUserRequestBody } from "@/types/userTypes";
+import {
+  CreateNewUserRequestBody,
+  ValidateEmailRequestBody,
+} from "@/types/userTypes";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
 import { Request, RequestHandler, Response } from "express";
 import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
+import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -37,13 +40,20 @@ export const creatNewUserController: RequestHandler = async (
       email,
       password,
     });
+    
+    if (!newUser) {
+      res.status(500).json({
+        message: "Internal server error try later!"
+      })
+      return
+    }
 
     // generate token for emial verification
     const otpToken = generateEmailVerificationToken();
 
     // send email for varification
     await sendVerificationEmail({
-      email:newUser.email,
+      email: newUser.email,
       otpToken,
       userId: newUser._id.toString(),
       userName: newUser.name,
@@ -59,6 +69,67 @@ export const creatNewUserController: RequestHandler = async (
     console.log("Error while creating new User!", error);
     return res.status(500).json({
       message: "Error while creating new user!",
+    });
+  }
+};
+
+/**
+ * Validate Email
+ *
+ * @param {Object} req - The request object from the client.
+ * @param {Object} req.body - The body of the request containing the validation data.
+ * @param {string} req.body.userId - The ID of the user attempting to validate their email.
+ * @param {string} req.body.otpToken - The OTP token sent to the user's email for verification.
+ * @param {Object} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Returns a JSON response with a success message if validation is successful.
+ * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
+ * @desc    Validates the user's email using an OTP token sent to their email.
+ * @route   POST: /api/v1/user/verify-email
+ * @access  Public
+ */
+export const validateEmail = async (
+  req: Request<{}, {}, ValidateEmailRequestBody>,
+  res: Response<{}>
+): Promise<void> => {
+  try {
+    const { userId, otpToken } = req.body;
+
+    // Check if the user exists
+    const isUserExists = await EmailVerificationTokenModel.findOne({
+      owner: userId,
+    });
+    if (!isUserExists) {
+      res.status(404).json({
+        message: "User not found.",
+      });
+      return;
+    }
+
+    // Verify the OTP token
+    const isTokenValid = await isUserExists.compareToken(otpToken);
+    if (!isTokenValid) {
+      res.status(400).json({
+        message: "Invalid or expired OTP token.",
+      });
+      return;
+    }
+
+    // Mark the user's email as verified
+    isUserExists.isEmailVerified = true;
+    await isUserExists.save();
+    await UserModel.findByIdAndUpdate(userId, {
+      isVerified: true,
+    });
+
+    // after verify delete otp token from email verification model/document
+    await EmailVerificationTokenModel.findByIdAndDelete(isUserExists._id);
+
+    // Send success response
+    res.status(200).json({ message: "Email verified successfully." });
+  } catch (error) {
+    console.log("Error while validating OTP!", error);
+    res.status(500).json({
+      messge: "Internal server error!",
     });
   }
 };

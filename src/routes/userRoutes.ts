@@ -1,6 +1,7 @@
 import {
   creatNewUserController,
   greetingController,
+  validateEmail,
 } from "@/controllers/userController";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { CreateNewUserSchemaValidation } from "@/utils/userSchemaValidation";
@@ -14,5 +15,6 @@ userRoutes.post(
   schemaValidatorMiddleware(CreateNewUserSchemaValidation),
   creatNewUserController
 );
+userRoutes.post('/verify-email', validateEmail)
 
 export default userRoutes;

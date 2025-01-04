@@ -15,7 +15,7 @@ export const sendVerificationEmail = async (userProfile: UserProfile) => {
   // save token into db for verification purpose
   await EmailVerificationTokenModel.create({
     token: otpToken,
-    woner: userId,
+    owner: userId,
   });
 
   const transport = nodemailer.createTransport({

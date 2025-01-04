@@ -16,16 +16,21 @@ export interface UserDocument {
   followings: ObjectId[];
 }
 
-interface RequestBody {
+interface CreateUserRequestBody {
   name: string;
   email: string;
   password: string;
 }
 
 export interface CreateNewUserRequestBody extends Request {
-  body: RequestBody;
+  body: CreateUserRequestBody;
 }
 
 export interface Methods {
   validatePassword(password: string): Promise<boolean>;
+}
+
+export interface ValidateEmailRequestBody {
+  userId: string;
+  otpToken: string;
 }
