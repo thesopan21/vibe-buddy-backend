@@ -3,18 +3,27 @@ import {
   greetingController,
   validateEmail,
 } from "@/controllers/userController";
+import {
+  CreateNewUserSchemaValidation,
+  EmailVerifiactionRequestBodyValidation,
+} from "@/utils/userSchemaValidation";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
-import { CreateNewUserSchemaValidation } from "@/utils/userSchemaValidation";
 import { Router } from "express";
 
 const userRoutes = Router();
 
 userRoutes.get("/", greetingController);
+
 userRoutes.post(
   "/register",
   schemaValidatorMiddleware(CreateNewUserSchemaValidation),
   creatNewUserController
 );
-userRoutes.post('/verify-email', validateEmail)
+
+userRoutes.post(
+  "/verify-email",
+  schemaValidatorMiddleware(EmailVerifiactionRequestBodyValidation),
+  validateEmail
+);
 
 export default userRoutes;
