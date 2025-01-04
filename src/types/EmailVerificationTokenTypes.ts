@@ -4,7 +4,6 @@ export interface EmailVerificationTokenModelDocument {
   owner: ObjectId;
   token: string;
   createdAt: Date;
-  isEmailVerified?:boolean
 }
 
 export interface Methods {

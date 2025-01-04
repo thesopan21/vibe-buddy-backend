@@ -115,8 +115,6 @@ export const validateEmail = async (
     }
 
     // Mark the user's email as verified
-    isUserExists.isEmailVerified = true;
-    await isUserExists.save();
     await UserModel.findByIdAndUpdate(userId, {
       isVerified: true,
     });

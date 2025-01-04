@@ -26,10 +26,6 @@ const emailVerificationTokenSchema = new Schema<
       expires: 600,
       default: Date.now(),
     },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,
