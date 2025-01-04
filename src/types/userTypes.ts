@@ -34,3 +34,7 @@ export interface ValidateEmailRequestBody {
   userId: string;
   otpToken: string;
 }
+
+export interface ReverificationTokenRequestBody {
+  userId: string;
+}

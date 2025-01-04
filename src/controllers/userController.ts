@@ -1,12 +1,14 @@
 import UserModel from "@/model/userModel";
 import {
   CreateNewUserRequestBody,
+  ReverificationTokenRequestBody,
   ValidateEmailRequestBody,
 } from "@/types/userTypes";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
 import { Request, RequestHandler, Response } from "express";
 import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
+import { isValidObjectId } from "mongoose";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -134,6 +136,88 @@ export const validateEmail = async (
     console.log("Error while validating OTP!", error);
     res.status(500).json({
       messge: "Internal server error!",
+    });
+  }
+};
+
+/**
+ * Send Reverification Token to the user via email
+ *
+ * This function performs the following steps:
+ * 1. Validates the provided `userId`.
+ * 2. Checks if the user exists in the database.
+ * 3. Deletes any previously stored verification tokens for the user.
+ * 4. Generates a new email verification token.
+ * 5. Stores the new token in the database.
+ * 6. Sends the verification token to the user's email.
+ * 7. Sends a success response or handles errors appropriately.
+ *
+ * @param {Object} req - The request object from the client.
+ * @param {Object} req.body - The body of the request containing the user ID.
+ * @param {string} req.body.userId - The ID of the user to send the re-verification token to.
+ * @param {Object} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Returns a JSON response with a success message if the token is sent successfully.
+ * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
+ * @desc    Sends a re-verification token to the user's email and stores the token in the database.
+ * @route   POST: /api/v1/user/reverification-token
+ * @access  Public
+ */
+export const sendReverificationToken = async (
+  req: Request<{}, {}, ReverificationTokenRequestBody>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { userId } = req.body;
+
+    // validate userId
+    if (!isValidObjectId(userId)) {
+      res.status(403).json({
+        message: "Invalid user id !",
+      });
+      return;
+    }
+
+    // get user from db
+    const user = await UserModel.findById(userId);
+
+    // validated user is exist or not
+    if (!user) {
+      res.status(404).json({
+        message: "USer not found",
+      });
+      return;
+    }
+
+    // delete previous stored token from db
+    await EmailVerificationTokenModel.findOneAndDelete({
+      owner: userId,
+    });
+
+    // generate new token
+    const newOtpToken = generateEmailVerificationToken();
+
+    // save newly generated otp into db
+    await EmailVerificationTokenModel.create({
+      owner: userId,
+      token: newOtpToken,
+    });
+
+    // send otp to the user
+    sendVerificationEmail({
+      email: user?.email,
+      userName: user?.name,
+      userId: user?._id.toString(),
+      otpToken: newOtpToken,
+    });
+
+    // send success response
+    res.status(200).json({
+      message: "OTP send successfully!",
+    });
+  } catch (error) {
+    console.log("Error while sending reverification email", error);
+    res.status(500).json({
+      error: "Error while sending re-verification OTP.",
     });
   }
 };
