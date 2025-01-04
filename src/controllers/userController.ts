@@ -40,16 +40,22 @@ export const creatNewUserController: RequestHandler = async (
       email,
       password,
     });
-    
+
     if (!newUser) {
       res.status(500).json({
-        message: "Internal server error try later!"
-      })
-      return
+        message: "Internal server error try later!",
+      });
+      return;
     }
 
     // generate token for emial verification
     const otpToken = generateEmailVerificationToken();
+
+    // save token into db for verification purpose
+    await EmailVerificationTokenModel.create({
+      token: otpToken,
+      owner: newUser._id,
+    });
 
     // send email for varification
     await sendVerificationEmail({

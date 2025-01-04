@@ -12,12 +12,6 @@ import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 export const sendVerificationEmail = async (userProfile: UserProfile) => {
   const { email, otpToken, userId, userName } = userProfile;
 
-  // save token into db for verification purpose
-  await EmailVerificationTokenModel.create({
-    token: otpToken,
-    owner: userId,
-  });
-
   const transport = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
