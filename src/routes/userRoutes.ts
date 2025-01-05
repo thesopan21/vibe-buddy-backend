@@ -1,5 +1,6 @@
 import {
   creatNewUserController,
+  generateForgetPasswordUrl,
   greetingController,
   validateEmail,
 } from "@/controllers/userController";
@@ -25,5 +26,7 @@ userRoutes.post(
   schemaValidatorMiddleware(EmailVerifiactionRequestBodyValidation),
   validateEmail
 );
+
+userRoutes.post("/reset-password", generateForgetPasswordUrl);
 
 export default userRoutes;

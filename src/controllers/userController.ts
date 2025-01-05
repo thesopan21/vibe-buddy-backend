@@ -5,10 +5,14 @@ import {
   ValidateEmailRequestBody,
 } from "@/types/userTypes";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
-import { Request, RequestHandler, Response } from "express";
 import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
+import { ResetPasswordRequestBody } from "@/types/resetPasswordTypes";
+import ResetPasswordModel from "@/model/resetPasswordModel";
+import { PASSWORD_RESET_URI } from "@/utils/processEnvVaribale";
 import { isValidObjectId } from "mongoose";
+import { randomBytes } from "crypto";
+import { Request, RequestHandler, Response } from "express";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -218,6 +222,46 @@ export const sendReverificationToken = async (
     console.log("Error while sending reverification email", error);
     res.status(500).json({
       error: "Error while sending re-verification OTP.",
+    });
+  }
+};
+
+/**
+ * generate forget password url
+ */
+export const generateForgetPasswordUrl = async (
+  req: Request<{}, {}, ResetPasswordRequestBody>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    // find user in db
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      res.status(403).json({
+        message: "Account not found",
+      });
+    }
+
+    // generate random token
+    const passwordToken = randomBytes(36).toString("hex");
+
+    // save password token in db
+    await ResetPasswordModel.create({
+      owner: user?._id,
+      token: passwordToken,
+    });
+
+    const passwordResetUrl = `${PASSWORD_RESET_URI}?token=${passwordToken}&userId:${user?._id}`;
+
+    res.status(200).json({
+      passwordResetUrl,
+    });
+  } catch (error) {
+    console.log("Error while generatig password", error);
+    res.status(500).json({
+      message: "Internal servver error!",
     });
   }
 };
