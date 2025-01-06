@@ -25,3 +25,9 @@ export interface UserProfile {
   email: string;
   userId: string;
 }
+
+export interface ResetPasswordOptions {
+  email: string;
+  passwordResetUrl: string;
+  userName:string
+}

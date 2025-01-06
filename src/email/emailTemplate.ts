@@ -5,13 +5,14 @@ interface Options {
   banner: string;
   btnTitle: string;
   userName: string;
+  msg?:string
 }
 
 
 export const generateTemplate = (options: Options) => {
-  const { title, link, userName, logo, banner, btnTitle } = options;
+  const { title, link, userName, logo, banner, btnTitle, msg } = options;
 
-  const message = `Hi ${userName}, welcome to Vibe Buddy! there are so much things that
+  const message = msg ? msg : `Hi ${userName}, welcome to Vibe Buddy! there are so much things that
   we do for verified users. use the given OTP to verify your email. kindly do not share your OTP with anyone`
 
   return `

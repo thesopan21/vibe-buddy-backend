@@ -2,12 +2,26 @@ import nodemailer from "nodemailer";
 import {
   MAILTRAP_PASSWORD,
   MAILTRAP_USERNAME,
-  VERIFICATION_EMAIL,
+  VERIFICATION_EMAIL_FROM,
 } from "./processEnvVaribale";
-import { UserProfile } from "@/types/EmailVerificationTokenTypes";
+import {
+  ResetPasswordOptions,
+  UserProfile,
+} from "@/types/EmailVerificationTokenTypes";
 import { generateTemplate } from "@/email/emailTemplate";
 import path from "path";
-import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
+
+const createEmailTransportor = () => {
+  const emailTransportor = nodemailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: MAILTRAP_USERNAME,
+      pass: MAILTRAP_PASSWORD,
+    },
+  });
+  return emailTransportor;
+};
 
 export const sendVerificationEmail = async (userProfile: UserProfile) => {
   const { email, otpToken, userId, userName } = userProfile;
@@ -43,6 +57,45 @@ export const sendVerificationEmail = async (userProfile: UserProfile) => {
         filename: "emailWelcomeBanner.png",
         path: path.join(__dirname, "../assets/images/emailWelcomeBanner.png"),
         cid: "welcome",
+      },
+    ],
+  });
+};
+
+export const sendResetPasswordLinkEmail = async (
+  userProfile: ResetPasswordOptions
+) => {
+  const { email, passwordResetUrl, userName } = userProfile;
+
+  const message =
+    "We just received a request that you forget your passwrod. no problem you can use the below link below to create a new brand password.";
+
+
+  const transport = createEmailTransportor();
+
+  transport.sendMail({
+    to: email,
+    from: VERIFICATION_EMAIL_FROM,
+    subject: "Reset Password",
+    html: generateTemplate({
+      title: "Forget Password",
+      userName: userName,
+      banner: "cid:forgotPasswordBanner",
+      logo: "cid:logo",
+      btnTitle: "Reset Password",
+      link: passwordResetUrl,
+      msg: message
+    }),
+    attachments: [
+      {
+        filename: "vibeBuddyLogo1.png",
+        path: path.join(__dirname, "../assets/images/vibeBuddyLogo1.png"),
+        cid: "logo",
+      },
+      {
+        filename: "forgotPasswordBanner.png",
+        path: path.join(__dirname, "../assets/images/forgotPasswordBanner.png"),
+        cid: "forgotPasswordBanner",
       },
     ],
   });

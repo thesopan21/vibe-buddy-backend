@@ -5,7 +5,10 @@ import {
   ValidateEmailRequestBody,
 } from "@/types/userTypes";
 import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
-import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
+import {
+  sendResetPasswordLinkEmail,
+  sendVerificationEmail,
+} from "@/utils/sendVerificationEmail";
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 import { ResetPasswordRequestBody } from "@/types/resetPasswordTypes";
 import ResetPasswordModel from "@/model/resetPasswordModel";
@@ -242,10 +245,17 @@ export const generateForgetPasswordUrl = async (
       res.status(403).json({
         message: "Account not found",
       });
+      return;
     }
+    
+    // delete prev expire token if it is exist
+    await ResetPasswordModel.findOneAndDelete({
+      owner: user._id,
+    });
 
     // generate random token
     const passwordToken = randomBytes(36).toString("hex");
+    
 
     // save password token in db
     await ResetPasswordModel.create({
@@ -254,6 +264,12 @@ export const generateForgetPasswordUrl = async (
     });
 
     const passwordResetUrl = `${PASSWORD_RESET_URI}?token=${passwordToken}&userId:${user?._id}`;
+
+    sendResetPasswordLinkEmail({
+      email: user?.email,
+      passwordResetUrl: passwordResetUrl,
+      userName: user?.name,
+    });
 
     res.status(200).json({
       passwordResetUrl,
