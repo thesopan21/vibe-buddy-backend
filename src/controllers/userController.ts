@@ -230,7 +230,27 @@ export const sendReverificationToken = async (
 };
 
 /**
- * generate forget password url
+ * Generate Forget Password URL and send it to the user's email.
+ *
+ * This function performs the following steps:
+ * 1. Validates the provided `email`.
+ * 2. Checks if the user exists in the database.
+ * 3. Deletes any previously stored password reset tokens for the user.
+ * 4. Generates a new password reset token.
+ * 5. Stores the new token in the database.
+ * 6. Constructs the password reset URL.
+ * 7. Sends the reset URL to the user's email.
+ * 8. Sends a success response or handles errors appropriately.
+ *
+ * @param {Object} req - The request object from the client.
+ * @param {Object} req.body - The body of the request containing the email.
+ * @param {string} req.body.email - The email of the user to send the password reset URL to.
+ * @param {Object} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Returns a JSON response with the password reset URL if successful.
+ * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
+ * @desc    Generates a password reset URL and sends it to the user's email, ensuring secure token handling.
+ * @route   POST: /api/v1/user//reset-password
+ * @access  Public
  */
 export const generateForgetPasswordUrl = async (
   req: Request<{}, {}, ResetPasswordRequestBody>,
@@ -247,7 +267,7 @@ export const generateForgetPasswordUrl = async (
       });
       return;
     }
-    
+
     // delete prev expire token if it is exist
     await ResetPasswordModel.findOneAndDelete({
       owner: user._id,
@@ -255,7 +275,6 @@ export const generateForgetPasswordUrl = async (
 
     // generate random token
     const passwordToken = randomBytes(36).toString("hex");
-    
 
     // save password token in db
     await ResetPasswordModel.create({
@@ -272,7 +291,7 @@ export const generateForgetPasswordUrl = async (
     });
 
     res.status(200).json({
-      passwordResetUrl,
+      message:"Password reset Link send on your email",
     });
   } catch (error) {
     console.log("Error while generatig password", error);
