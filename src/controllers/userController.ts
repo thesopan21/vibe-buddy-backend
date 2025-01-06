@@ -252,7 +252,7 @@ export const sendReverificationToken = async (
  * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
  * @desc    Generates a password reset URL and sends it to the user's email, ensuring secure token handling.
  * @route   POST: /api/v1/user/reset-password
- * @access  Public
+ * @access  private
  */
 export const generateForgetPasswordUrl = async (
   req: Request<{}, {}, ResetPasswordRequestBody>,
@@ -318,7 +318,7 @@ export const generateForgetPasswordUrl = async (
  * @throws {Error} - Handles any unexpected errors during the process.
  * @desc    Completes the password reset process and confirms success to the client.
  * @route   POST: /api/v1/user/verify-reset-password-token
- * @access  Public
+ * @access  private
  */
 export const resetPassword = async (req: Request, res: Response) => {
   res.status(200).json({
@@ -328,8 +328,29 @@ export const resetPassword = async (req: Request, res: Response) => {
 };
 
 /**
- * Update the user password
+ * Update the User Password
  *
+ * This function allows a user to update their password securely.
+ *
+ * Steps performed:
+ * 1. Validates the user by their `userId`.
+ * 2. Ensures the new password is different from the existing password.
+ * 3. Updates the user's password in the database.
+ * 4. Deletes any associated reset password tokens.
+ * 5. Sends a success email to notify the user of the password change.
+ * 6. Sends an appropriate response to the client indicating success or failure.
+ *
+ * @param {Object} req - The request object from the client.
+ * @param {Object} req.body - The body of the request containing the user ID and new password.
+ * @param {string} req.body.password - The new password to be set.
+ * @param {string} req.body.userId - The ID of the user updating their password.
+ * @param {string} req.body.token.
+ * @param {Object} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Sends a JSON response indicating the result of the update.
+ * @throws {Error} - Handles any unexpected errors during the process.
+ * @desc    Updates a user's password and ensures secure handling of related tokens.
+ * @route   POST: /api/v1/user/update-password
+ * @access  private
  */
 export const updatePassword = async (
   req: Request<{}, {}, UpdatePasswordRequestBody>,
