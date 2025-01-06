@@ -29,5 +29,10 @@ export interface UserProfile {
 export interface ResetPasswordOptions {
   email: string;
   passwordResetUrl: string;
-  userName:string
+  userName: string;
+}
+
+export interface UpdatePasswordUserProfile {
+  email: string;
+  userName: string;
 }

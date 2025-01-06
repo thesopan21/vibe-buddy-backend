@@ -2,13 +2,15 @@ import UserModel from "@/model/userModel";
 import {
   CreateNewUserRequestBody,
   ReverificationTokenRequestBody,
+  UpdatePasswordRequestBody,
   ValidateEmailRequestBody,
 } from "@/types/userTypes";
-import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
 import {
   sendResetPasswordLinkEmail,
+  sendUpdatePasswordSuccessMail,
   sendVerificationEmail,
-} from "@/utils/sendVerificationEmail";
+} from "@/utils/sendEmail";
+import { generateEmailVerificationToken } from "@/utils/generateVerificationToken";
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 import { ResetPasswordRequestBody } from "@/types/resetPasswordTypes";
 import ResetPasswordModel from "@/model/resetPasswordModel";
@@ -302,12 +304,74 @@ export const generateForgetPasswordUrl = async (
 };
 
 /**
- * Reset password
+ * Reset Password
  *
+ * This function handles resetting the user's password.
+ *
+ * Steps performed:
+ * 1. Accepts a request to reset the password.
+ * 2. Sends a response indicating that the password reset was successful.
+ *
+ * @param {Object} req - The request object from the client.
+ * @param {Object} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Sends a JSON response indicating the password reset result.
+ * @throws {Error} - Handles any unexpected errors during the process.
+ * @desc    Completes the password reset process and confirms success to the client.
+ * @route   POST: /api/v1/user/verify-reset-password-token
+ * @access  Public
  */
 export const resetPassword = async (req: Request, res: Response) => {
   res.status(200).json({
     message: "Password reset successfully.",
     isPasswordReset: true,
   });
+};
+
+/**
+ * Update the user password
+ *
+ */
+export const updatePassword = async (
+  req: Request<{}, {}, UpdatePasswordRequestBody>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { password, userId } = req.body;
+
+    //find the user
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(403).json({
+        message: "Unauthorized access!",
+      });
+      return;
+    }
+
+    const isValidPassword = await user.validatePassword(password);
+    if (isValidPassword) {
+      res.status(422).json({
+        message: "The new password must be different!",
+      });
+      return;
+    }
+
+    user.password = password;
+    await user.save();
+
+    // delete stored token
+    await ResetPasswordModel.findOneAndDelete({
+      owner: user._id,
+    });
+
+    // send success email
+    sendUpdatePasswordSuccessMail({
+      email: user.email,
+      userName: user.name,
+    });
+
+    res.status(200).json({
+      message: "Password updated successfully!",
+      success: true,
+    });
+  } catch (error) {}
 };

@@ -38,3 +38,9 @@ export interface ValidateEmailRequestBody {
 export interface ReverificationTokenRequestBody {
   userId: string;
 }
+
+export interface UpdatePasswordRequestBody {
+  userId: string;
+  password: string;
+  token: string;
+}

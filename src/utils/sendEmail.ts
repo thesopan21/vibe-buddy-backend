@@ -2,10 +2,12 @@ import nodemailer from "nodemailer";
 import {
   MAILTRAP_PASSWORD,
   MAILTRAP_USERNAME,
+  SIGN_IN_LINK,
   VERIFICATION_EMAIL_FROM,
 } from "./processEnvVaribale";
 import {
   ResetPasswordOptions,
+  UpdatePasswordUserProfile,
   UserProfile,
 } from "@/types/EmailVerificationTokenTypes";
 import { generateTemplate } from "@/email/emailTemplate";
@@ -70,7 +72,6 @@ export const sendResetPasswordLinkEmail = async (
   const message =
     "We just received a request that you forget your passwrod. no problem you can use the below link below to create a new brand password.";
 
-
   const transport = createEmailTransportor();
 
   transport.sendMail({
@@ -84,6 +85,41 @@ export const sendResetPasswordLinkEmail = async (
       logo: "cid:logo",
       btnTitle: "Reset Password",
       link: passwordResetUrl,
+      msg: message,
+    }),
+    attachments: [
+      {
+        filename: "vibeBuddyLogo1.png",
+        path: path.join(__dirname, "../assets/images/vibeBuddyLogo1.png"),
+        cid: "logo",
+      },
+      {
+        filename: "forgotPasswordBanner.png",
+        path: path.join(__dirname, "../assets/images/forgotPasswordBanner.png"),
+        cid: "forgotPasswordBanner",
+      },
+    ],
+  });
+};
+
+export const sendUpdatePasswordSuccessMail = async (
+  userProfile: UpdatePasswordUserProfile
+) => {
+  const { email, userName } = userProfile;
+  const mailTransportor = createEmailTransportor();
+  const message = `Dear ${userName} we just updatd your new password. You can  now sign in with you new password.`;
+
+  mailTransportor.sendMail({
+    to: email,
+    from: VERIFICATION_EMAIL_FROM,
+    subject: "Password update success",
+    html: generateTemplate({
+      title: "Password update Successfully!",
+      userName,
+      banner: "cid:forgotPasswordBanner",
+      logo: "cid:vibeBuddyLogo1",
+      btnTitle: "Sign In",
+      link: SIGN_IN_LINK,
       msg: message
     }),
     attachments: [

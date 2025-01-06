@@ -26,7 +26,7 @@ const otpTokenValidation = string()
   .min(6, "OTP length must be 6 digit only!")
   .max(6, "OTP length must be 6 digit only!");
 
-const tokenValidation = string().trim().required("OTP required!");
+const tokenValidation = string().trim().required("Token is required!");
 
 const userIdValidation = string()
   .transform(function (userId) {
@@ -53,3 +53,9 @@ export const ResetPasswordRequestBodyValidations = object().shape({
   userId: userIdValidation,
   token: tokenValidation,
 });
+
+export const UpdatePasswordRequestBodyValidation = object().shape({
+  userId: userIdValidation,
+  token: tokenValidation,
+  password: passwordValidation
+})
