@@ -249,7 +249,7 @@ export const sendReverificationToken = async (
  * @returns {Promise<void>} - Returns a JSON response with the password reset URL if successful.
  * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
  * @desc    Generates a password reset URL and sends it to the user's email, ensuring secure token handling.
- * @route   POST: /api/v1/user//reset-password
+ * @route   POST: /api/v1/user/reset-password
  * @access  Public
  */
 export const generateForgetPasswordUrl = async (
@@ -291,7 +291,7 @@ export const generateForgetPasswordUrl = async (
     });
 
     res.status(200).json({
-      message:"Password reset Link send on your email",
+      message: "Password reset Link send on your email",
     });
   } catch (error) {
     console.log("Error while generatig password", error);
@@ -299,4 +299,15 @@ export const generateForgetPasswordUrl = async (
       message: "Internal servver error!",
     });
   }
+};
+
+/**
+ * Reset password
+ *
+ */
+export const resetPassword = async (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Password reset successfully.",
+    isPasswordReset: true,
+  });
 };

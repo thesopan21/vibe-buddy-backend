@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { string, number, object, InferType } from "yup";
+import { string, object } from "yup";
 
 const nameValidation = string()
   .trim()
@@ -20,17 +20,13 @@ const passwordValidation = string()
     "Password is to weak!"
   );
 
-export const CreateNewUserSchemaValidation = object().shape({
-  name: nameValidation,
-  email: emailValidation,
-  password: passwordValidation,
-});
-
 const otpTokenValidation = string()
   .trim()
   .required("OTP required!")
   .min(6, "OTP length must be 6 digit only!")
   .max(6, "OTP length must be 6 digit only!");
+
+const tokenValidation = string().trim().required("OTP required!");
 
 const userIdValidation = string()
   .transform(function (userId) {
@@ -42,7 +38,18 @@ const userIdValidation = string()
   .trim()
   .required("User id is required!");
 
+export const CreateNewUserRequestBodyValidation = object().shape({
+  name: nameValidation,
+  email: emailValidation,
+  password: passwordValidation,
+});
+
 export const EmailVerifiactionRequestBodyValidation = object().shape({
   otpToken: otpTokenValidation,
   userId: userIdValidation,
+});
+
+export const ResetPasswordRequestBodyValidations = object().shape({
+  userId: userIdValidation,
+  token: tokenValidation,
 });
