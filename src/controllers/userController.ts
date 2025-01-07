@@ -3,6 +3,7 @@ import {
   CreateNewUserRequestBody,
   ReverificationTokenRequestBody,
   UpdatePasswordRequestBody,
+  UserSignInRequestBody,
   ValidateEmailRequestBody,
 } from "@/types/userTypes";
 import {
@@ -14,9 +15,10 @@ import { generateEmailVerificationToken } from "@/utils/generateVerificationToke
 import EmailVerificationTokenModel from "@/model/emailVerificationTokenModel";
 import { ResetPasswordRequestBody } from "@/types/resetPasswordTypes";
 import ResetPasswordModel from "@/model/resetPasswordModel";
-import { PASSWORD_RESET_URI } from "@/utils/processEnvVaribale";
+import { JWT_SECRET, PASSWORD_RESET_URI } from "@/utils/processEnvVaribale";
 import { isValidObjectId } from "mongoose";
 import { randomBytes } from "crypto";
+import jsonWebToken from "jsonwebtoken";
 import { Request, RequestHandler, Response } from "express";
 
 export const greetingController = (req: Request, res: Response) => {
@@ -395,4 +397,66 @@ export const updatePassword = async (
       success: true,
     });
   } catch (error) {}
+};
+
+/**
+ * User Sign in Controller
+ *
+ * @param req
+ * @param res
+ */
+export const userSignInController = async (
+  req: Request<{}, {}, UserSignInRequestBody>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    // find the user inside the db
+    const user = await UserModel.findOne({
+      email,
+    });
+
+    if (!user) {
+      res.status(403).json({
+        message: "Invalid email!",
+      });
+      return;
+    }
+
+    // compaire the passoword
+    const isValidPassword = await user.validatePassword(password);
+    if (!isValidPassword) {
+      res.status(403).json({
+        message: "Invalid Password",
+      });
+      return;
+    }
+
+    // generate the sign in token using jwt
+    const token = jsonWebToken.sign({ userId: user._id }, JWT_SECRET);
+
+    // update and save token inside the db
+    user.tokens.push(token);
+    await user.save();
+
+    // send success message
+    res.status(200).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified,
+        avatar: user.avatars?.url || "",
+        followersCount: user.followers.length,
+        followingsCount: user.followings.length,
+      },
+      authToken: token,
+    });
+  } catch (error) {
+    console.log("Error while user sign in:", error);
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
 };

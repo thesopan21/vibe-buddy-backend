@@ -57,5 +57,10 @@ export const ResetPasswordRequestBodyValidations = object().shape({
 export const UpdatePasswordRequestBodyValidation = object().shape({
   userId: userIdValidation,
   token: tokenValidation,
-  password: passwordValidation
-})
+  password: passwordValidation,
+});
+
+export const SignInRequestBodyValidation = object().shape({
+  email: emailValidation,
+  password: passwordValidation,
+});

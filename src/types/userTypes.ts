@@ -44,3 +44,8 @@ export interface UpdatePasswordRequestBody {
   password: string;
   token: string;
 }
+
+export interface UserSignInRequestBody {
+  email: string;
+  password: string;
+}

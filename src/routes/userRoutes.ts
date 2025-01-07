@@ -4,12 +4,14 @@ import {
   greetingController,
   resetPassword,
   updatePassword,
+  userSignInController,
   validateEmail,
 } from "@/controllers/userController";
 import {
   CreateNewUserRequestBodyValidation,
   EmailVerifiactionRequestBodyValidation,
   ResetPasswordRequestBodyValidations,
+  SignInRequestBodyValidation,
   UpdatePasswordRequestBodyValidation,
 } from "@/utils/userSchemaValidation";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
@@ -46,6 +48,12 @@ userRoutes.post(
   schemaValidatorMiddleware(UpdatePasswordRequestBodyValidation),
   isValidUserAndTokenMiddleware,
   updatePassword
+);
+
+userRoutes.post(
+  "/sign-in",
+  schemaValidatorMiddleware(SignInRequestBodyValidation),
+  userSignInController
 );
 
 export default userRoutes;
