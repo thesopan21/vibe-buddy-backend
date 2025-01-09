@@ -49,3 +49,19 @@ export interface UserSignInRequestBody {
   email: string;
   password: string;
 }
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        name: string;
+        email: string;
+        isVerified: boolean;
+        avatar?: string;
+        followersCount: number;
+        followingsCount: number;
+      };
+    }
+  }
+}

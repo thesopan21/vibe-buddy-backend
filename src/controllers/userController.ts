@@ -461,17 +461,48 @@ export const userSignInController = async (
   }
 };
 
+/**
+ * User Authentication Controller
+ *
+ * This controller validates the authenticated user by utilizing the `req.user` object
+ * populated by the authorization middleware. It ensures that the user is properly
+ * authorized and returns the user's details if validation is successful.
+ *
+ * @param {Request} req - The request object from the client.
+ * @param {Request.user} req.user - The authenticated user's details, added by the middleware.
+ * @param {Response} res - The response object to send the response to the client.
+ * @returns {Promise<void>} - Sends a JSON response with the validation result and user details.
+ * @throws {Error} - Returns a JSON response with an error message and a status code if an error occurs.
+ *
+ * Steps:
+ * 1. Retrieves the authenticated user's details from `req.user`.
+ * 2. Checks if the `req.user` object is populated. If not, it sends a 401 Unauthorized response.
+ * 3. Returns a 200 OK response with the user's details if validation is successful.
+ * 4. Handles errors and sends a 500 Internal Server Error response if an exception occurs.
+ *
+ * @desc Validates the authenticated user and returns their details.
+ */
 export const isAuthUserController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    const user = req.user;
+
+    if (!user) {
+      res.status(401).json({
+        message: "Unauthorized access!",
+      });
+      return;
+    }
+
     res.status(200).json({
-      message: "User validate successfully!",
-      isValidaUser: true,
+      message: "User validated successfully!",
+      isValidUser: true,
+      user,
     });
   } catch (error) {
-    console.log("error while validating user");
+    console.error("Error while validating user:", error);
     res.status(500).json({
       message: "User validation failed!",
     });
