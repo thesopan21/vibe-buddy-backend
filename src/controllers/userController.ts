@@ -460,3 +460,20 @@ export const userSignInController = async (
     });
   }
 };
+
+export const isAuthUserController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    res.status(200).json({
+      message: "User validate successfully!",
+      isValidaUser: true,
+    });
+  } catch (error) {
+    console.log("error while validating user");
+    res.status(500).json({
+      message: "User validation failed!",
+    });
+  }
+};

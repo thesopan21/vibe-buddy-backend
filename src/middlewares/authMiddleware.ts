@@ -1,5 +1,8 @@
 import ResetPasswordModel from "@/model/resetPasswordModel";
-import { NextFunction, Request, Response } from "express";
+import UserModel from "@/model/userModel";
+import { JWT_SECRET } from "@/utils/processEnvVaribale";
+import { NextFunction, Request, RequestHandler, Response } from "express";
+import { JwtPayload, verify } from "jsonwebtoken";
 
 /**
  * Verify Reset Password Token and User ID Middleware
@@ -57,6 +60,66 @@ export const isValidUserAndTokenMiddleware = async (
     console.log("Error while verifying Token:", error);
     res.status(500).json({
       message: "Internal server Error",
+    });
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+export const isAuthorizedUserMiddleware = async (
+  req: Request<{}, {}, {}>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      res.status(404).json({
+        message: "Token not found!",
+      });
+      return;
+    }
+
+    const userToken = authorization.split(" ")[1];
+    console.log("extracted user token:", userToken);
+
+    if (!userToken) {
+      res.status(404).json({
+        message: "Token not found!",
+      });
+      return;
+    }
+
+    const jwtPayload = verify(userToken, JWT_SECRET) as JwtPayload;
+    const userId = jwtPayload.userId;
+    
+    if (!userId) {
+      res.status(404).json({
+        message: "Invalid jwt payload!",
+      });
+      return;
+    }
+
+    const user = UserModel.findOne({
+      _id: userId,
+      tokens: userToken,
+    });
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found!",
+      });
+      return;
+    }
+
+    next();
+  } catch (error) {
+    console.log("Error while authorizing user!", error);
+    res.status(500).json({
+      message: "Internal server Error!",
     });
   }
 };
