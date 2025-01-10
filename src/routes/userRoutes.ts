@@ -22,6 +22,7 @@ import {
   isAuthorizedUserMiddleware,
   isValidUserAndTokenMiddleware,
 } from "@/middlewares/authMiddleware";
+import { parseFileMiddleware } from "@/middlewares/fileParserMiddleware";
 
 const userRoutes = Router();
 
@@ -67,6 +68,10 @@ userRoutes.get(
   isAuthUserController
 );
 
-userRoutes.post("/update-profile-pic", uploadUserProfilePicture);
+userRoutes.post(
+  "/update-profile-pic",
+  parseFileMiddleware,
+  uploadUserProfilePicture
+);
 
 export default userRoutes;

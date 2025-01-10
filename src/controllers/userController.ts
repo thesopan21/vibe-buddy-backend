@@ -21,6 +21,9 @@ import { randomBytes } from "crypto";
 import jsonWebToken from "jsonwebtoken";
 import { Request, RequestHandler, Response } from "express";
 import formidable from "formidable";
+import path from "path";
+import { accessSync, mkdirSync } from "fs";
+import { RequestWithFile } from "@/middlewares/fileParserMiddleware";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -516,23 +519,21 @@ export const isAuthUserController = async (
  * @param res
  */
 export const uploadUserProfilePicture = async (
-  req: Request,
+  req: RequestWithFile,
   res: Response
 ): Promise<void> => {
   try {
-    // check content type inside req header
-    if (!req.headers["content-type"]?.startsWith("multipart/form-data;")) {
-      res.status(422).json({
-        message: "only accept form data",
-      });
-      return;
+    const destDir = path.join(__dirname, "../public/profiles");
+
+    // Ensure the destination directory exists
+    try {
+      await accessSync(destDir);
+    } catch (error) {
+      await mkdirSync(destDir);
     }
 
-    const userData = formidable();
-    userData.parse(req, (err, fields, files) => {
-      res.status(200).json({
-        message: "profile pics uploaded successfully!",
-      });
+    res.status(200).json({
+      message: "profile pics uploaded successfully!",
     });
   } catch (error) {
     console.log("Error while uploading profile pic!", error);

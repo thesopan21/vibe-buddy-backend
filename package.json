@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/thesopan21/vibe-buddy-backend#readme",
   "dependencies": {
-    "@types/formidable": "^3.4.5",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -39,6 +38,7 @@
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
+    "@types/formidable": "^3.4.5",
     "@types/helmet": "^0.0.48",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.96",
