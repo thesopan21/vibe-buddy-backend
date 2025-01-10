@@ -2,19 +2,25 @@ import {
   creatNewUserController,
   generateForgetPasswordUrl,
   greetingController,
+  isAuthUserController,
   resetPassword,
   updatePassword,
+  userSignInController,
   validateEmail,
 } from "@/controllers/userController";
 import {
   CreateNewUserRequestBodyValidation,
   EmailVerifiactionRequestBodyValidation,
   ResetPasswordRequestBodyValidations,
+  SignInRequestBodyValidation,
   UpdatePasswordRequestBodyValidation,
 } from "@/utils/userSchemaValidation";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { Router } from "express";
-import { isValidUserAndTokenMiddleware } from "@/middlewares/authMiddleware";
+import {
+  isAuthorizedUserMiddleware,
+  isValidUserAndTokenMiddleware,
+} from "@/middlewares/authMiddleware";
 
 const userRoutes = Router();
 
@@ -46,6 +52,18 @@ userRoutes.post(
   schemaValidatorMiddleware(UpdatePasswordRequestBodyValidation),
   isValidUserAndTokenMiddleware,
   updatePassword
+);
+
+userRoutes.post(
+  "/sign-in",
+  schemaValidatorMiddleware(SignInRequestBodyValidation),
+  userSignInController
+);
+
+userRoutes.get(
+  "/is-authorized",
+  isAuthorizedUserMiddleware,
+  isAuthUserController
 );
 
 export default userRoutes;
