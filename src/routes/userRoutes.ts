@@ -5,6 +5,7 @@ import {
   isAuthUserController,
   resetPassword,
   updatePassword,
+  uploadUserProfilePicture,
   userSignInController,
   validateEmail,
 } from "@/controllers/userController";
@@ -65,5 +66,7 @@ userRoutes.get(
   isAuthorizedUserMiddleware,
   isAuthUserController
 );
+
+userRoutes.post("/update-profile-pic", uploadUserProfilePicture);
 
 export default userRoutes;

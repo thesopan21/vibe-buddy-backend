@@ -20,6 +20,7 @@ import { isValidObjectId } from "mongoose";
 import { randomBytes } from "crypto";
 import jsonWebToken from "jsonwebtoken";
 import { Request, RequestHandler, Response } from "express";
+import formidable from "formidable";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -505,6 +506,38 @@ export const isAuthUserController = async (
     console.error("Error while validating user:", error);
     res.status(500).json({
       message: "User validation failed!",
+    });
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+export const uploadUserProfilePicture = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    // check content type inside req header
+    if (!req.headers["content-type"]?.startsWith("multipart/form-data;")) {
+      res.status(422).json({
+        message: "only accept form data",
+      });
+      return;
+    }
+
+    const userData = formidable();
+    userData.parse(req, (err, fields, files) => {
+      res.status(200).json({
+        message: "profile pics uploaded successfully!",
+      });
+    });
+  } catch (error) {
+    console.log("Error while uploading profile pic!", error);
+    res.status(500).json({
+      message: "Unable to upload profile pic!",
     });
   }
 };
