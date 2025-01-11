@@ -70,6 +70,7 @@ userRoutes.get(
 
 userRoutes.post(
   "/update-profile-pic",
+  isAuthorizedUserMiddleware,
   parseFileMiddleware,
   uploadUserProfilePicture
 );
