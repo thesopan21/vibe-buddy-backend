@@ -524,7 +524,7 @@ export const uploadUserProfilePicture = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name } = req.body;
+    const { userName } = req.body;
     const userProfilePic = req.files?.avatar;
 
     // find user by id
@@ -533,23 +533,27 @@ export const uploadUserProfilePicture = async (
       throw new Error("User not found, Something went wrong!");
     }
 
-    if (typeof name !== "string") {
+    if (typeof userName !== "string") {
       res.status(422).json({
         message: "Invalid user name!",
       });
       return;
     }
 
-    if (name.trim().length < 3) {
+    if (userName.trim().length < 3) {
       res.status(422).json({
         message: "User name is to sort!",
       });
       return;
     }
 
-    // validation for files
+    // validation for files data
     if (userProfilePic) {
       // if there is already profile pic
+      const profilePublicId = user.avatars?.publicId;
+      if (profilePublicId) {
+        await cloudinary.uploader.destroy(profilePublicId);
+      }
 
       // upload a new avatar file
       const { secure_url, public_id } = await cloudinary.uploader.upload(
