@@ -24,6 +24,7 @@ import formidable from "formidable";
 import path from "path";
 import { accessSync, mkdirSync } from "fs";
 import { RequestWithFile } from "@/middlewares/fileParserMiddleware";
+import cloudinary from "@/config/cloudinary";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -523,17 +524,55 @@ export const uploadUserProfilePicture = async (
   res: Response
 ): Promise<void> => {
   try {
-    const destDir = path.join(__dirname, "../public/profiles");
+    const { name } = req.body;
+    const userProfilePic = req.files?.avatar;
 
-    // Ensure the destination directory exists
-    try {
-      await accessSync(destDir);
-    } catch (error) {
-      await mkdirSync(destDir);
+    // find user by id
+    const user = await UserModel.findById(req.user?.id);
+    if (!user) {
+      throw new Error("User not found, Something went wrong!");
     }
+
+    if (typeof name !== "string") {
+      res.status(422).json({
+        message: "Invalid user name!",
+      });
+      return;
+    }
+
+    if (name.trim().length < 3) {
+      res.status(422).json({
+        message: "User name is to sort!",
+      });
+      return;
+    }
+
+    // validation for files
+    if (userProfilePic) {
+      // if there is already profile pic
+
+      // upload a new avatar file
+      const { secure_url, public_id } = await cloudinary.uploader.upload(
+        userProfilePic.filepath,
+        {
+          crop: "thumb",
+          gravity: "face",
+          width: 300,
+          height: 300,
+        }
+      );
+
+      user.avatars = {
+        publicId: public_id,
+        url: secure_url,
+      };
+    }
+
+    await user.save();
 
     res.status(200).json({
       message: "profile pics uploaded successfully!",
+      avatars: user.avatars,
     });
   } catch (error) {
     console.log("Error while uploading profile pic!", error);
