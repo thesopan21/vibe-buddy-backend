@@ -20,6 +20,11 @@ import { isValidObjectId } from "mongoose";
 import { randomBytes } from "crypto";
 import jsonWebToken from "jsonwebtoken";
 import { Request, RequestHandler, Response } from "express";
+import formidable from "formidable";
+import path from "path";
+import { accessSync, mkdirSync } from "fs";
+import { RequestWithFile } from "@/middlewares/fileParserMiddleware";
+import cloudinary from "@/config/cloudinary";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
@@ -505,6 +510,78 @@ export const isAuthUserController = async (
     console.error("Error while validating user:", error);
     res.status(500).json({
       message: "User validation failed!",
+    });
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+export const uploadUserProfilePicture = async (
+  req: RequestWithFile,
+  res: Response
+): Promise<void> => {
+  try {
+    const { userName } = req.body;
+    const userProfilePic = req.files?.avatar;
+
+    // find user by id
+    const user = await UserModel.findById(req.user?.id);
+    if (!user) {
+      throw new Error("User not found, Something went wrong!");
+    }
+
+    if (typeof userName !== "string") {
+      res.status(422).json({
+        message: "Invalid user name!",
+      });
+      return;
+    }
+
+    if (userName.trim().length < 3) {
+      res.status(422).json({
+        message: "User name is to sort!",
+      });
+      return;
+    }
+
+    // validation for files data
+    if (userProfilePic) {
+      // if there is already profile pic
+      const profilePublicId = user.avatars?.publicId;
+      if (profilePublicId) {
+        await cloudinary.uploader.destroy(profilePublicId);
+      }
+
+      // upload a new avatar file
+      const { secure_url, public_id } = await cloudinary.uploader.upload(
+        userProfilePic.filepath,
+        {
+          crop: "thumb",
+          gravity: "face",
+          width: 300,
+          height: 300,
+        }
+      );
+
+      user.avatars = {
+        publicId: public_id,
+        url: secure_url,
+      };
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "profile pics uploaded successfully!",
+      avatars: user.avatars,
+    });
+  } catch (error) {
+    console.log("Error while uploading profile pic!", error);
+    res.status(500).json({
+      message: "Unable to upload profile pic!",
     });
   }
 };

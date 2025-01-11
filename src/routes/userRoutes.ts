@@ -5,6 +5,7 @@ import {
   isAuthUserController,
   resetPassword,
   updatePassword,
+  uploadUserProfilePicture,
   userSignInController,
   validateEmail,
 } from "@/controllers/userController";
@@ -21,6 +22,7 @@ import {
   isAuthorizedUserMiddleware,
   isValidUserAndTokenMiddleware,
 } from "@/middlewares/authMiddleware";
+import { parseFileMiddleware } from "@/middlewares/fileParserMiddleware";
 
 const userRoutes = Router();
 
@@ -64,6 +66,13 @@ userRoutes.get(
   "/is-authorized",
   isAuthorizedUserMiddleware,
   isAuthUserController
+);
+
+userRoutes.post(
+  "/update-profile-pic",
+  isAuthorizedUserMiddleware,
+  parseFileMiddleware,
+  uploadUserProfilePicture
 );
 
 export default userRoutes;
