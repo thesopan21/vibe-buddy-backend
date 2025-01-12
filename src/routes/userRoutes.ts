@@ -16,7 +16,7 @@ import {
   ResetPasswordRequestBodyValidations,
   SignInRequestBodyValidation,
   UpdatePasswordRequestBodyValidation,
-} from "@/utils/userSchemaValidation";
+} from "@/validations/userSchemaValidation";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { Router } from "express";
 import {
