@@ -14,5 +14,5 @@ export interface AudioDocumentSchema {
     publicId: string;
   };
   likes: ObjectId[];
-  categgories: AudioCategoryTypes;
+  categories: AudioCategoryTypes;
 }

@@ -33,7 +33,7 @@ const audioSchema = new Schema<AudioDocumentSchema>(
         ref: "User",
       },
     ],
-    categgories: {
+    categories: {
       type: String,
       enum: categories,
       default: "Other",
