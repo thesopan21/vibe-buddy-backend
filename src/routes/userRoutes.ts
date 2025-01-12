@@ -6,6 +6,7 @@ import {
   resetPassword,
   updatePassword,
   uploadUserProfilePicture,
+  userLogoutController,
   userSignInController,
   validateEmail,
 } from "@/controllers/userController";
@@ -74,5 +75,7 @@ userRoutes.post(
   parseFileMiddleware,
   uploadUserProfilePicture
 );
+
+userRoutes.post("/logout", isAuthorizedUserMiddleware, userLogoutController);
 
 export default userRoutes;

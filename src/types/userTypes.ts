@@ -62,6 +62,7 @@ declare global {
         followersCount: number;
         followingsCount: number;
       };
+      token: string
     }
   }
 }
