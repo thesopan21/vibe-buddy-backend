@@ -1,6 +1,6 @@
 import { addNewAudioController } from "@/controllers/audioController";
 import { isAuthUserController } from "@/controllers/userController";
-import { isVerifiedUserMiddleware } from "@/middlewares/authMiddleware";
+import { isAuthorizedUserMiddleware, isVerifiedUserMiddleware } from "@/middlewares/authMiddleware";
 import { parseFileMiddleware } from "@/middlewares/fileParserMiddleware";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { AudioSchemaValidations } from "@/validations/audioModelValidations";
@@ -10,7 +10,7 @@ const audioRoutes = Router();
 
 audioRoutes.post(
   "/add-new-audio",
-  isAuthUserController,
+  isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
   parseFileMiddleware,
   schemaValidatorMiddleware(AudioSchemaValidations),

@@ -1,11 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import formidable, { File } from "formidable";
-
-export interface RequestWithFile extends Request {
-  files?: {
-    [key: string]: File;
-  };
-}
+import { RequestWithFile } from "@/types/genericTypes";
+import { NextFunction, Response } from "express";
+import formidable from "formidable";
 
 export const parseFileMiddleware = async (
   req: RequestWithFile,
