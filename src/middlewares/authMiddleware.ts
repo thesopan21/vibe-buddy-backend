@@ -130,8 +130,6 @@ export const isAuthorizedUserMiddleware = async (
       return;
     }
 
-    console.log(user)
-
     req.user = {
       id: user._id.toString(),
       name: user.name,
@@ -141,6 +139,8 @@ export const isAuthorizedUserMiddleware = async (
       followersCount: user.followers.length,
       followingsCount: user.followings.length,
     };
+
+    req.token = userToken
 
     next();
   } catch (error) {

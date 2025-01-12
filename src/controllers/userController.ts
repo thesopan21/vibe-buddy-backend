@@ -585,3 +585,37 @@ export const uploadUserProfilePicture = async (
     });
   }
 };
+
+export const userLogoutController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { fromAll } = req.params;
+    const token = req.token;
+
+    // find user by id
+    const user = await UserModel.findById(req.user?.id);
+    if (!user) {
+      throw new Error("User not found somthing went wrong!");
+    }
+
+    // logout from all devices
+    if (fromAll === "yes") {
+      user.tokens = [];
+    } else {
+      user.tokens = user.tokens.filter((t) => t !== token);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User logout successfully.",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
