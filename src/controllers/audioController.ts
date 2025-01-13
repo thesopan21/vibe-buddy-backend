@@ -14,7 +14,6 @@ export const addNewAudioController = async (
     const { title, about, categories } = req.body;
     const poster = req.files?.poster;
     const audioFile = req.files?.file;
-    const ownerId = req.user?.id;
 
     if (!audioFile) {
       res.status(422).json({

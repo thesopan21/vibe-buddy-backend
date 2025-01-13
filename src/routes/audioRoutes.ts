@@ -6,7 +6,7 @@ import {
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
 } from "@/middlewares/authMiddleware";
-import { parseFileMiddleware } from "@/middlewares/fileParserMiddleware";
+import { fileParseMiddleware } from "@/middlewares/fileParserMiddleware";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { AudioSchemaValidations } from "@/validations/audioModelValidations";
 import { Router } from "express";
@@ -14,11 +14,11 @@ import { Router } from "express";
 const audioRoutes = Router();
 
 audioRoutes.post(
-  "/add-new-audio",
+  "/create",
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
-  parseFileMiddleware,
-  schemaValidatorMiddleware(AudioSchemaValidations),
+  fileParseMiddleware,
+  // schemaValidatorMiddleware(AudioSchemaValidations),
   addNewAudioController
 );
 
@@ -26,7 +26,7 @@ audioRoutes.patch(
   "/update/:audioId",
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
-  parseFileMiddleware,
+  fileParseMiddleware,
   // schemaValidatorMiddleware(AudioSchemaValidations),
   updateAudioController
 );

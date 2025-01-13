@@ -1,23 +1,27 @@
-import { RequestWithFile } from "@/types/genericTypes";
-import { NextFunction, Response } from "express";
-import formidable from "formidable";
+import { Request, Response, NextFunction } from "express";
+import formidable, { File } from "formidable";
 
-export const parseFileMiddleware = async (
-  req: RequestWithFile,
+export interface RequestWithFiles extends Request {
+  body: any;
+  files?: Record<string, File>;
+}
+
+export const fileParseMiddleware = async (
+  req: RequestWithFiles,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Validate Content-Type header
-    if (!req.headers["content-type"]?.includes("multipart/form-data")) {
+    const contentType = req.headers["content-type"];
+
+    if (!contentType || !contentType.startsWith("multipart/form-data")) {
       res.status(422).json({
         message: "Only multipart/form-data is accepted.",
       });
       return;
     }
-
-    const fileData = formidable({ multiples: false });
-    const [fields, files] = await fileData.parse(req);
+    const formData = formidable({ multiples: false });
+    const [fields, files] = await formData.parse(req);
 
     for (let key in fields) {
       const field = fields[key];
@@ -38,7 +42,7 @@ export const parseFileMiddleware = async (
 
     next();
   } catch (error) {
-    console.log("file parse middleware error!");
+    console.log("error while uploading file!", error);
     res.status(422).json({
       message: "unable to upload file",
     });
