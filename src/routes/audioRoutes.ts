@@ -1,6 +1,11 @@
-import { addNewAudioController } from "@/controllers/audioController";
-import { isAuthUserController } from "@/controllers/userController";
-import { isAuthorizedUserMiddleware, isVerifiedUserMiddleware } from "@/middlewares/authMiddleware";
+import {
+  addNewAudioController,
+  updateAudioController,
+} from "@/controllers/audioController";
+import {
+  isAuthorizedUserMiddleware,
+  isVerifiedUserMiddleware,
+} from "@/middlewares/authMiddleware";
 import { parseFileMiddleware } from "@/middlewares/fileParserMiddleware";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import { AudioSchemaValidations } from "@/validations/audioModelValidations";
@@ -15,6 +20,15 @@ audioRoutes.post(
   parseFileMiddleware,
   schemaValidatorMiddleware(AudioSchemaValidations),
   addNewAudioController
+);
+
+audioRoutes.patch(
+  "/update/:audioId",
+  isAuthorizedUserMiddleware,
+  isVerifiedUserMiddleware,
+  parseFileMiddleware,
+  // schemaValidatorMiddleware(AudioSchemaValidations),
+  updateAudioController
 );
 
 export default audioRoutes;

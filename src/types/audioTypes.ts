@@ -18,10 +18,16 @@ export interface AudioDocumentSchema {
   categories: AudioCategoryTypes;
 }
 
-export interface AddNewAudioRequestBody extends RequestWithFile{
-  body: {
-    title: string;
-    about: string;
-    categories?: AudioCategoryTypes;
-  };
+interface Body {
+  title: string;
+  about: string;
+  categories?: AudioCategoryTypes;
+}
+
+export interface AddNewAudioRequestBody extends RequestWithFile {
+  body: Body;
+}
+
+export interface UpdateAudioRequestBody extends RequestWithFile {
+  body: Body;
 }
