@@ -110,7 +110,7 @@ export const isAuthorizedUserMiddleware = async (
 
     const jwtPayload = verify(userToken, JWT_SECRET) as JwtPayload;
     const userId = jwtPayload.userId;
-    
+
     if (!userId) {
       res.status(404).json({
         message: "Invalid jwt payload!",
@@ -140,13 +140,39 @@ export const isAuthorizedUserMiddleware = async (
       followingsCount: user.followings.length,
     };
 
-    req.token = userToken
+    req.token = userToken;
 
     next();
   } catch (error) {
     console.log("Error while authorizing user!", error);
     res.status(500).json({
       message: "Internal server Error!",
+    });
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export const isVerifiedUserMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    if (!req.user?.isVerified) {
+      res.status(403).json({
+        message: "Please verify your email!",
+      });
+      return;
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };

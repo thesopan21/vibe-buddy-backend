@@ -20,11 +20,8 @@ import { isValidObjectId } from "mongoose";
 import { randomBytes } from "crypto";
 import jsonWebToken from "jsonwebtoken";
 import { Request, RequestHandler, Response } from "express";
-import formidable from "formidable";
-import path from "path";
-import { accessSync, mkdirSync } from "fs";
-import { RequestWithFile } from "@/middlewares/fileParserMiddleware";
 import cloudinary from "@/config/cloudinary";
+import { RequestWithFile } from "@/types/genericTypes";
 
 export const greetingController = (req: Request, res: Response) => {
   res.json({ message: "Hello user, We are in Production!" });
