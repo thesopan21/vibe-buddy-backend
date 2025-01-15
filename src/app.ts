@@ -4,6 +4,7 @@ import cors from "cors";
 
 import userRoutes from "./routes/userRoutes";
 import audioRoutes from "./routes/audioRoutes";
+import favoriteRoutes from "./routes/favoriteRoutes";
 
 const app = express();
 
@@ -20,5 +21,8 @@ app.use("/api/v1/user", userRoutes);
 
 // audio routes
 app.use('/api/v1/audio', audioRoutes)
+
+// favorite routes
+app.use('api/v1/favorite', favoriteRoutes)
 
 export default app;
