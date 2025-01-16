@@ -23,6 +23,6 @@ app.use("/api/v1/user", userRoutes);
 app.use('/api/v1/audio', audioRoutes)
 
 // favorite routes
-app.use('api/v1/favorite', favoriteRoutes)
+app.use('/api/v1/favorite', favoriteRoutes)
 
 export default app;

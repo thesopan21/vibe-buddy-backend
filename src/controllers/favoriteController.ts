@@ -41,7 +41,7 @@ export const toggleFavoriteAudio = async (
   res: Response
 ): Promise<void> => {
   try {
-    const audioId = req.params.audioId;
+    const audioId = req.query.audioId;
     const owner = req.user?.id;
     let message: string;
 
