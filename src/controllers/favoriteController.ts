@@ -1,5 +1,7 @@
 import AudioModel from "@/model/audioModel";
 import FavoriteModel from "@/model/favoriteModel";
+import { AudioDocumentSchema } from "@/types/audioTypes";
+import { FavoriteDocument, PopulateFavoriteList } from "@/types/favoriteTypes";
 import { Request, Response } from "express";
 import { isValidObjectId, ObjectId } from "mongoose";
 
@@ -110,6 +112,49 @@ export const toggleFavoriteAudio = async (
   } catch (error) {
     res.status(500).json({
       message: "Internal server error!",
+    });
+  }
+};
+
+export const getFavoriteAudioController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const ownerId = req.user?.id;
+    const audioList = await FavoriteModel.findOne({
+      owner: ownerId,
+    }).populate<{ items: PopulateFavoriteList[] }>("items");
+
+    if (!audioList) {
+      res.status(404).json({
+        message: "User has no favorite audio yet!",
+        audios: [],
+      });
+      return;
+    }
+
+    const audios = audioList.items.map((item) => {
+      return {
+        id: item._id,
+        title: item.title,
+        category: item.categories,
+        file: item.file.url,
+        poster: item.poster?.url,
+        owner: {
+          id: item.owner._id,
+          name: item.owner.name,
+        },
+      };
+    });
+
+    res.status(200).json({
+      audios,
+    });
+  } catch (error) {
+    console.log("Error while getting favorite audio!", error);
+    res.status(500).json({
+      message: "Error while getting favorite audio!",
     });
   }
 };
