@@ -70,7 +70,6 @@ export const toggleFavoriteAudio = async (
         { owner },
         { $pull: { items: audioId } }
       );
-      console.log("updated favorite list:", updateFavoriteList);
       message = "Audio removed successfully.";
     } else {
       const favoriteList = await FavoriteModel.findOne({ owner });
