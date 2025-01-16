@@ -89,6 +89,22 @@ export const toggleFavoriteAudio = async (
       message = "Audio added succefully!";
     }
 
+    if (message === "Audio added succefully!") {
+      await AudioModel.findByIdAndUpdate(audioId, {
+        $addToSet: {
+          likes: req.user?.id,
+        },
+      });
+    }
+
+    if (message === "Audio removed successfully.") {
+      await AudioModel.findByIdAndUpdate(audioId, {
+        $pull: {
+          likes: req.user?.id,
+        },
+      });
+    }
+
     res.status(200).json({
       message,
     });
