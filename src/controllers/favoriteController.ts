@@ -122,7 +122,7 @@ export const getFavoriteAudioController = async (
 ): Promise<void> => {
   try {
     const ownerId = req.user?.id;
-    const audioList = await FavoriteModel.findOne({
+    const audioList = await AudioModel.findOne({
       owner: ownerId,
     }).populate<{ items: PopulateFavoriteList[] }>("items");
 
