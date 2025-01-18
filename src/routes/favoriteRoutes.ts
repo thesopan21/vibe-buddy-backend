@@ -1,4 +1,8 @@
-import { toggleFavoriteAudio } from "@/controllers/favoriteController";
+import {
+  getFavoriteAudioController,
+  getIsFavoriteAudioController,
+  toggleFavoriteAudio,
+} from "@/controllers/favoriteController";
 import {
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
@@ -12,6 +16,20 @@ favoriteRoutes.post(
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
   toggleFavoriteAudio
+);
+
+favoriteRoutes.get(
+  "/",
+  isAuthorizedUserMiddleware,
+  isVerifiedUserMiddleware,
+  getFavoriteAudioController
+);
+
+favoriteRoutes.get(
+  "/is-favorites",
+  isAuthorizedUserMiddleware,
+  isVerifiedUserMiddleware,
+  getIsFavoriteAudioController
 );
 
 export default favoriteRoutes;
