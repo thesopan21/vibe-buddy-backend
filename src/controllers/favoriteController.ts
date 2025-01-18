@@ -135,6 +135,7 @@ export const getFavoriteAudioController = async (
     }
 
     const audios = audioList.items.map((item) => {
+      console.log("audios:", audios);
       return {
         id: item._id,
         title: item.title,
@@ -155,6 +156,36 @@ export const getFavoriteAudioController = async (
     console.log("Error while getting favorite audio!", error);
     res.status(500).json({
       message: "Error while getting favorite audio!",
+    });
+  }
+};
+
+export const getIsFavoriteAudioController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const audioId = req.query.audioId;
+
+    if (!isValidObjectId(audioId)) {
+      res.status(422).json({
+        message: "Invalid audio id!",
+      });
+      return;
+    }
+
+    const favorite = await FavoriteModel.findOne({
+      owner: req.user?.id,
+      items: audioId,
+    });
+
+    res.status(200).json({
+      isFavorite: favorite ? true : false,
+    });
+  } catch (error) {
+    console.log("Error while getting isFavorite", error);
+    res.status(500).json({
+      message: "Internal server error!",
     });
   }
 };

@@ -1,5 +1,6 @@
 import {
   getFavoriteAudioController,
+  getIsFavoriteAudioController,
   toggleFavoriteAudio,
 } from "@/controllers/favoriteController";
 import {
@@ -22,6 +23,13 @@ favoriteRoutes.get(
   isAuthorizedUserMiddleware,
   isVerifiedUserMiddleware,
   getFavoriteAudioController
+);
+
+favoriteRoutes.get(
+  "/is-favorites",
+  isAuthorizedUserMiddleware,
+  isVerifiedUserMiddleware,
+  getIsFavoriteAudioController
 );
 
 export default favoriteRoutes;
