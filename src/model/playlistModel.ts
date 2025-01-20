@@ -1,11 +1,5 @@
-import { Model, model, models, ObjectId, Schema } from "mongoose";
-
-export interface PlaylistDocument {
-  title: string;
-  owner: ObjectId;
-  items: ObjectId[];
-  visibility: "public" | "private" | "auto";
-}
+import { PlaylistDocument } from "@/types/playlistTypes";
+import { Model, model, models, Schema } from "mongoose";
 
 const playListSchema = new Schema<PlaylistDocument>(
   {
