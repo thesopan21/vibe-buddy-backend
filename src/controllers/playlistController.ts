@@ -2,7 +2,7 @@ import AudioModel from "@/model/audioModel";
 import PlayListModel from "@/model/playlistModel";
 import { CreateNewPlaylistRequest } from "@/types/playlistTypes";
 import { Request, Response } from "express";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 
 export const createPlaylistcontroller = async (
   req: CreateNewPlaylistRequest,
@@ -29,7 +29,7 @@ export const createPlaylistcontroller = async (
     });
 
     if (audioId) {
-      newPlaylist.items = [new mongoose.Types.ObjectId(ownerId),];
+      newPlaylist.items = [audioId as any];
     }
 
     await newPlaylist.save();
