@@ -90,8 +90,11 @@ export const updatePlaylistController = async (
         return;
       }
 
-      playlist.items.push(itemId as any);
-      await playlist.save();
+      // playlist.items.push(itemId as any);
+      // await playlist.save();
+      await PlayListModel.findByIdAndUpdate(playlist._id, {
+        $addToSet: {items: itemId}
+      })
     }
 
     res.status(200).json({
