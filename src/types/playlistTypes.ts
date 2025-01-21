@@ -8,12 +8,23 @@ export interface PlaylistDocument {
   visibility: "public" | "private" | "auto";
 }
 
-interface RequestBody {
+interface CreateBody {
   title: string;
   audioId: string;
   visibility: "public" | "private";
 }
 
+interface UpdateBody {
+  title: string;
+  id: string;
+  itemId: string;
+  visibility: "public" | "private";
+}
+
 export interface CreateNewPlaylistRequest extends Request {
-  body: RequestBody;
+  body: CreateBody;
+}
+
+export interface UpdateOldPlaylistRequestBody extends Request {
+  body: UpdateBody;
 }

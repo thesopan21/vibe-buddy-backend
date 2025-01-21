@@ -1,8 +1,11 @@
 import AudioModel from "@/model/audioModel";
 import PlayListModel from "@/model/playlistModel";
-import { CreateNewPlaylistRequest } from "@/types/playlistTypes";
+import {
+  CreateNewPlaylistRequest,
+  UpdateOldPlaylistRequestBody,
+} from "@/types/playlistTypes";
 import { Request, Response } from "express";
-import { isValidObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
 
 export const createPlaylistcontroller = async (
   req: CreateNewPlaylistRequest,
@@ -43,6 +46,64 @@ export const createPlaylistcontroller = async (
       },
     });
   } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const updatePlaylistController = async (
+  req: UpdateOldPlaylistRequestBody,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id, itemId, title, visibility } = req.body;
+    const ownerId = req.user?.id;
+
+    const playlist = await PlayListModel.findOneAndUpdate(
+      {
+        _id: id,
+        owner: ownerId,
+      },
+      {
+        title,
+        visibility,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!playlist) {
+      res.status(404).json({
+        message: "Playlist not found!",
+      });
+      return;
+    }
+
+    if (itemId) {
+      const audio = await AudioModel.findById(itemId);
+      if (!audio) {
+        res.status(404).json({
+          message: "Audio not found!",
+        });
+        return;
+      }
+
+      playlist.items.push(itemId as any);
+      await playlist.save();
+    }
+
+    res.status(200).json({
+      playlist: {
+        id: playlist._id,
+        title: playlist.title,
+        items: playlist.items,
+        visibility: playlist.visibility,
+      },
+    });
+  } catch (error) {
+    console.log("Error while updating playlist:", error);
     res.status(500).json({
       message: "Internal Server Error!",
     });
