@@ -1,5 +1,6 @@
 import {
   createPlaylistcontroller,
+  deletePlaylistController,
   updatePlaylistController,
 } from "@/controllers/playlistController";
 import {
@@ -8,6 +9,7 @@ import {
 } from "@/middlewares/authMiddleware";
 import { schemaValidatorMiddleware } from "@/middlewares/schemaValidationMiddleware";
 import {
+  deletePlaylistSchema,
   newPlayListValidatonSchema,
   oldPlaylistSchema,
 } from "@/validations/playlistValidation";
@@ -28,6 +30,13 @@ playlistRouter.patch(
   isAuthorizedUserMiddleware,
   schemaValidatorMiddleware(oldPlaylistSchema),
   updatePlaylistController
+);
+
+playlistRouter.delete(
+  "/delete",
+  isAuthorizedUserMiddleware,
+  schemaValidatorMiddleware(deletePlaylistSchema),
+  deletePlaylistController
 );
 
 export default playlistRouter;

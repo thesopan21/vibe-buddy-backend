@@ -21,6 +21,12 @@ interface UpdateBody {
   visibility: "public" | "private";
 }
 
+export interface DeletePlaylistQuery {
+  playlistId?: string;
+  audioId?: string;
+  all?: string;
+}
+
 export interface CreateNewPlaylistRequest extends Request {
   body: CreateBody;
 }

@@ -15,6 +15,8 @@ const visibilityValidation = string()
   .oneOf(["public", "private"], "invalid category")
   .required("Visibility is missing!");
 
+const allValidation = string().oneOf(["yes"]);
+
 export const newPlayListValidatonSchema = object().shape({
   title: titleValidation,
   audioId: idValidation,
@@ -26,4 +28,9 @@ export const oldPlaylistSchema = object().shape({
   id: idValidation,
   itemId: idValidation,
   visibility: visibilityValidation,
+});
+
+export const deletePlaylistSchema = object().shape({
+  playlistId: idValidation,
+  audioId: idValidation,
 });
