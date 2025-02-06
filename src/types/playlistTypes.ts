@@ -34,3 +34,10 @@ export interface CreateNewPlaylistRequest extends Request {
 export interface UpdateOldPlaylistRequestBody extends Request {
   body: UpdateBody;
 }
+
+export interface GetPaginatedPlaylistRequestBody extends Request {
+  query: {
+    pageNumber?: string;
+    pageSize?: string;
+  };
+}

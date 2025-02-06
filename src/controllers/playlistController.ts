@@ -3,6 +3,7 @@ import PlayListModel from "@/model/playlistModel";
 import {
   CreateNewPlaylistRequest,
   DeletePlaylistQuery,
+  GetPaginatedPlaylistRequestBody,
   UpdateOldPlaylistRequestBody,
 } from "@/types/playlistTypes";
 import { Request, Response } from "express";
@@ -187,15 +188,21 @@ export const deletePlaylistController = async (
 };
 
 export const getPlaylistByUserProfile = async (
-  req: Request,
+  req: GetPaginatedPlaylistRequestBody,
   res: Response
 ): Promise<void> => {
   try {
+    const pageNumber = Number(req.query.pageNumber) || 1;
+    const pageSize = Number(req.query.pageSize) || 10;
+
     const playlist = await PlayListModel.find({
       owner: req.user?.id,
       visibility: { $ne: "auto" },
       // sort the playlist with latest timestamp
-    }).sort("-createdAt");
+    })
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .sort("-createdAt");
 
     if (!playlist) {
       res.status(404).json({
@@ -215,6 +222,8 @@ export const getPlaylistByUserProfile = async (
 
     res.status(200).json({
       playlist: filteredPlaylist,
+      pageNumber,
+      pageSize,
     });
   } catch (error) {
     res.status(500).json({
