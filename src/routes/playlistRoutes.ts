@@ -1,6 +1,7 @@
 import {
   createPlaylistcontroller,
   deletePlaylistController,
+  getPlaylistByUserProfile,
   updatePlaylistController,
 } from "@/controllers/playlistController";
 import {
@@ -37,6 +38,12 @@ playlistRouter.delete(
   isAuthorizedUserMiddleware,
   schemaValidatorMiddleware(deletePlaylistSchema),
   deletePlaylistController
+);
+
+playlistRouter.get(
+  "/by-profile",
+  isAuthorizedUserMiddleware,
+  getPlaylistByUserProfile
 );
 
 export default playlistRouter;
