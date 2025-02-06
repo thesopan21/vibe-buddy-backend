@@ -191,8 +191,30 @@ export const getPlaylistByUserProfile = async (
   res: Response
 ): Promise<void> => {
   try {
+    const playlist = await PlayListModel.find({
+      owner: req.user?.id,
+      visibility: { $ne: "auto" },
+      // sort the playlist with latest timestamp
+    }).sort("-createdAt");
+
+    if (!playlist) {
+      res.status(404).json({
+        message: "Oops!, playlist not found.",
+      });
+      return;
+    }
+
+    const filteredPlaylist = playlist.map((item) => {
+      return {
+        id: item._id,
+        title: item.title,
+        itemsCount: item.items.length,
+        visibility: item.visibility,
+      };
+    });
+
     res.status(200).json({
-      playlist: {},
+      playlist: filteredPlaylist,
     });
   } catch (error) {
     res.status(500).json({
