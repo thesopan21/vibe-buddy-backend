@@ -1,8 +1,10 @@
 import AudioModel from "@/model/audioModel";
 import PlayListModel from "@/model/playlistModel";
+import { PopulateFavoriteList } from "@/types/favoriteTypes";
 import {
   CreateNewPlaylistRequest,
   DeletePlaylistQuery,
+  GetAudioByPlalistIdReqBody,
   GetPaginatedPlaylistRequestBody,
   UpdateOldPlaylistRequestBody,
 } from "@/types/playlistTypes";
@@ -228,6 +230,64 @@ export const getPlaylistByUserProfile = async (
   } catch (error) {
     res.status(500).json({
       message: "Internal Server Error",
+    });
+  }
+};
+
+export const getAudiosByPlalistId = async (
+  req: GetAudioByPlalistIdReqBody,
+  res: Response
+): Promise<void> => {
+  try {
+    const { playlistId } = req.params;
+
+    if (!isValidObjectId(playlistId)) {
+      res.status(422).json({
+        message: "Invalid playlist id!",
+      });
+      return;
+    }
+
+    const playlist = await PlayListModel.findOne({
+      owner: req.user?.id,
+      _id: playlistId,
+    }).populate<{ items: PopulateFavoriteList[] }>({
+      path: "items",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
+
+    if (!playlist) {
+      res.status(200).json({
+        audios: [],
+      });
+      return;
+    }
+
+    const audios = playlist.items.map((item) => {
+      return {
+        id: item._id,
+        title: item.title,
+        category: item.categories,
+        file: item.file.url,
+        poster: item.poster?.url,
+        owner: {
+          name: item.owner.name,
+          id: item.owner._id,
+        },
+      };
+    });
+
+    res.status(200).json({
+      id: playlist._id,
+      title: playlist.title,
+      audios,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
     });
   }
 };

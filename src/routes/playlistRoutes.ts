@@ -1,6 +1,7 @@
 import {
   createPlaylistcontroller,
   deletePlaylistController,
+  getAudiosByPlalistId,
   getPlaylistByUserProfile,
   updatePlaylistController,
 } from "@/controllers/playlistController";
@@ -44,6 +45,12 @@ playlistRouter.get(
   "/by-profile",
   isAuthorizedUserMiddleware,
   getPlaylistByUserProfile
+);
+
+playlistRouter.get(
+  "/:playlistId",
+  isAuthorizedUserMiddleware,
+  getAudiosByPlalistId
 );
 
 export default playlistRouter;

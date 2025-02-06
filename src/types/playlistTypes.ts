@@ -41,3 +41,9 @@ export interface GetPaginatedPlaylistRequestBody extends Request {
     pageSize?: string;
   };
 }
+
+export interface GetAudioByPlalistIdReqBody extends Request {
+  params: {
+    playlistId: string;
+  };
+}
