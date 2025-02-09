@@ -5,3 +5,5 @@ export interface updateFollowerReqBodyType extends Request {
     profileId: string;
   };
 }
+
+export interface PublicAudiosType extends updateFollowerReqBodyType {}

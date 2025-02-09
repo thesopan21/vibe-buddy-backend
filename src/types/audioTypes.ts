@@ -8,10 +8,10 @@ export interface AudioFileType {
   publicId: string;
 }
 
-export interface AudioDocumentSchema {
+export interface AudioDocumentSchema <T=ObjectId>{
   title: string;
   about: string;
-  owner: ObjectId;
+  owner: T;
   file: AudioFileType;
   poster?: AudioFileType;
   likes: ObjectId[];
