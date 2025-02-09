@@ -1,4 +1,7 @@
-import { updateFollowers } from "@/controllers/followerController";
+import {
+  getUploadedAudio,
+  updateFollowers,
+} from "@/controllers/followerController";
 import { isAuthorizedUserMiddleware } from "@/middlewares/authMiddleware";
 import { Router } from "express";
 
@@ -10,5 +13,10 @@ profileRoutes.patch(
   updateFollowers
 );
 
+profileRoutes.get(
+  "/uploaded-audios",
+  isAuthorizedUserMiddleware,
+  getUploadedAudio
+);
 
-export default profileRoutes
+export default profileRoutes;

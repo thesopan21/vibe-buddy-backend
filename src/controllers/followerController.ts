@@ -128,7 +128,7 @@ export const updateFollowers = async (
  *
  */
 export const getUploadedAudio = async (
-  req: Request,
+  req: any,
   res: Response
 ): Promise<void> => {
   try {
