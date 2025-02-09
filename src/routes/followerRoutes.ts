@@ -4,8 +4,8 @@ import { Router } from "express";
 
 const followerRoutes = Router();
 
-followerRoutes.post(
-  "/update-follower/:userId",
+followerRoutes.patch(
+  "/update-follower/:profileId",
   isAuthorizedUserMiddleware,
   updateFollowers
 );
