@@ -1,4 +1,5 @@
 import {
+  getPublicPlaylist,
   getPublicProfileInfo,
   getPublicUploadedAudios,
   getUploadedAudio,
@@ -23,5 +24,7 @@ profileRoutes.get(
 
 profileRoutes.get("/uploaded-audios/:profileId", getPublicUploadedAudios);
 profileRoutes.get("/info/:profileId", getPublicProfileInfo);
+
+profileRoutes.get('/playlist/:profileId', getPublicPlaylist)
 
 export default profileRoutes;

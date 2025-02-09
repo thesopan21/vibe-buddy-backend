@@ -1,4 +1,5 @@
 import AudioModel from "@/model/audioModel";
+import PlayListModel from "@/model/playlistModel";
 import UserModel from "@/model/userModel";
 import { AudioDocumentSchema } from "@/types/audioTypes";
 import { PaginationQueryParams } from "@/types/genericTypes";
@@ -255,6 +256,58 @@ export const getPublicProfileInfo = async (
         follower: user.followers,
         avatar: user.avatars?.url,
       },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
+
+export const getPublicPlaylist = async (
+  req: PublicAudiosType,
+  res: Response
+): Promise<void> => {
+  try {
+    const pageNumber = Number(req.query.pageNumber) || 0;
+    const pageSize = Number(req.query.pageSize) || 10;
+    const { profileId } = req.params;
+
+    if (!isValidObjectId(profileId)) {
+      res.status(422).json({
+        message: "Invalid Profile id!",
+      });
+      return;
+    }
+
+    const playlist = await PlayListModel.find({
+      owner: profileId,
+      visibility: "public",
+    })
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .sort("-createdAt");
+
+    if (!playlist) {
+      res.json({
+        message: "Playlist not found",
+        playlist: [],
+      });
+      return;
+    }
+
+    const modifiedPlaylist = playlist.map((item) => {
+      return {
+        id: item._id,
+        title: item.title,
+        itemCount: item.items.length,
+        visibility: item.visibility,
+      };
+    });
+
+    res.json({
+      message: "success",
+      playlist: modifiedPlaylist,
     });
   } catch (error) {
     res.status(500).json({
