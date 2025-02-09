@@ -1,4 +1,5 @@
 import {
+  getPublicProfileInfo,
   getPublicUploadedAudios,
   getUploadedAudio,
   updateFollowers,
@@ -21,5 +22,6 @@ profileRoutes.get(
 );
 
 profileRoutes.get("/uploaded-audios/:profileId", getPublicUploadedAudios);
+profileRoutes.get("/info/:profileId", getPublicProfileInfo);
 
 export default profileRoutes;

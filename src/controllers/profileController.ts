@@ -223,3 +223,42 @@ export const getPublicUploadedAudios = async (
     });
   }
 };
+
+export const getPublicProfileInfo = async (
+  req: PublicAudiosType,
+  res: Response
+): Promise<void> => {
+  try {
+    const { profileId } = req.params;
+
+    if (!isValidObjectId(profileId)) {
+      res.status(422).json({
+        message: "Invalid Profile id!",
+      });
+      return;
+    }
+
+    const user = await UserModel.findById(profileId);
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.json({
+      messge: "success",
+      profile: {
+        id: user._id,
+        name: user.name,
+        follower: user.followers,
+        avatar: user.avatars?.url,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
