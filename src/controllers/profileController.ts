@@ -1,6 +1,8 @@
+import AudioModel from "@/model/audioModel";
 import UserModel from "@/model/userModel";
+import { PaginationQueryParams } from "@/types/genericTypes";
 import { updateFollowerReqBodyType } from "@/validations/profileSchemaValidation";
-import { Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
 /**
@@ -127,13 +129,40 @@ export const updateFollowers = async (
 /**
  *
  */
-export const getUploadedAudio = async (
-  req: any,
+export const getUploadedAudio: RequestHandler = async (
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    // Extract query params as strings and convert them to numbers
+    const pageNumber = Number(req.query.pageNumber) || 0;
+    const pageSize = Number(req.query.pageSize) || 10;
+
+    const audiosList = await AudioModel.find({ owner: req.user?.id })
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .sort("-createdAt")
+      .select("createdAt");
+
+    const audios = audiosList.map((audio) => {
+      return {
+        id: audio._id,
+        title: audio.title,
+        about: audio.about,
+        file: audio.file.url,
+        poster: audio.poster?.url,
+        date: audio.createdAt,
+        owner: {
+          name: req.user?.name,
+          id: req.user?.id,
+        },
+      };
+    });
     res.json({
       messge: "success",
+      audios,
+      pageNumber,
+      pageSize,
     });
   } catch (error) {
     res.status(500).json({

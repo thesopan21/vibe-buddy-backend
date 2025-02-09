@@ -6,3 +6,8 @@ export interface RequestWithFile extends Request {
     [key: string]: File;
   };
 }
+
+export interface PaginationQueryParams {
+  pageNumber: string;
+  pageSize: string;
+}
