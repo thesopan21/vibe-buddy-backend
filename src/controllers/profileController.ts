@@ -1,5 +1,5 @@
 import UserModel from "@/model/userModel";
-import { updateFollowerReqBodyType } from "@/validations/followerSchemaValidation";
+import { updateFollowerReqBodyType } from "@/validations/profileSchemaValidation";
 import { Response } from "express";
 import { isValidObjectId } from "mongoose";
 

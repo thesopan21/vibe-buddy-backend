@@ -6,7 +6,7 @@ import userRoutes from "./routes/userRoutes";
 import audioRoutes from "./routes/audioRoutes";
 import favoriteRoutes from "./routes/favoriteRoutes";
 import playlistRouter from "./routes/playlistRoutes";
-import profileRoutes from "./routes/followerRoutes";
+import profileRoutes from "./routes/profileRutes";
 
 const app = express();
 

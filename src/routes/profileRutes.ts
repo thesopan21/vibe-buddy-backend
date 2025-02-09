@@ -1,7 +1,7 @@
 import {
   getUploadedAudio,
   updateFollowers,
-} from "@/controllers/followerController";
+} from "@/controllers/profileController";
 import { isAuthorizedUserMiddleware } from "@/middlewares/authMiddleware";
 import { Router } from "express";
 
