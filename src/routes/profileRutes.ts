@@ -1,4 +1,5 @@
 import {
+  getPublicUploadedAudios,
   getUploadedAudio,
   updateFollowers,
 } from "@/controllers/profileController";
@@ -18,5 +19,7 @@ profileRoutes.get(
   isAuthorizedUserMiddleware,
   getUploadedAudio
 );
+
+profileRoutes.get("/uploaded-audios/:profileId", getPublicUploadedAudios);
 
 export default profileRoutes;

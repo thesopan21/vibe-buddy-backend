@@ -1,7 +1,10 @@
 import AudioModel from "@/model/audioModel";
 import UserModel from "@/model/userModel";
 import { PaginationQueryParams } from "@/types/genericTypes";
-import { updateFollowerReqBodyType } from "@/validations/profileSchemaValidation";
+import {
+  PublicAudiosType,
+  updateFollowerReqBodyType,
+} from "@/validations/profileSchemaValidation";
 import { Request, RequestHandler, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
@@ -151,10 +154,59 @@ export const getUploadedAudio: RequestHandler = async (
         about: audio.about,
         file: audio.file.url,
         poster: audio.poster?.url,
-        date: audio.createdAt,
+        // date: audio.createdAt,
         owner: {
           name: req.user?.name,
           id: req.user?.id,
+        },
+      };
+    });
+    res.json({
+      messge: "success",
+      audios,
+      pageNumber,
+      pageSize,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
+
+export const getPublicUploadedAudios = async (
+  req: PublicAudiosType,
+  res: Response
+): Promise<void> => {
+  try {
+    const pageNumber = Number(req.query.pageNumber) || 0;
+    const pageSize = Number(req.query.pageSize) || 10;
+    const { profileId } = req.params;
+
+    if (!isValidObjectId(profileId)) {
+      res.status(422).json({
+        message: "Invalid Profile id!",
+      });
+      return;
+    }
+
+    const audiosList = await AudioModel.find({ owner: profileId })
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .sort("-createdAt")
+      .populate("owner");
+
+    const audios = audiosList.map((audio) => {
+      return {
+        id: audio._id,
+        title: audio.title,
+        about: audio.about,
+        file: audio.file.url,
+        poster: audio.poster?.url,
+        // date: audio.createdAt,
+        owner: {
+          name: audio.owner.name,
+          id: audio.owner._id,
         },
       };
     });
