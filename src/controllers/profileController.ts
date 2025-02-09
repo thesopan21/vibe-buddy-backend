@@ -1,12 +1,13 @@
 import AudioModel from "@/model/audioModel";
 import UserModel from "@/model/userModel";
+import { AudioDocumentSchema } from "@/types/audioTypes";
 import { PaginationQueryParams } from "@/types/genericTypes";
 import {
   PublicAudiosType,
   updateFollowerReqBodyType,
 } from "@/validations/profileSchemaValidation";
 import { Request, RequestHandler, Response } from "express";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, ObjectId } from "mongoose";
 
 /**
  * @function updateFollowers
@@ -194,7 +195,7 @@ export const getPublicUploadedAudios = async (
       .skip(pageNumber * pageSize)
       .limit(pageSize)
       .sort("-createdAt")
-      .populate("owner");
+      .populate<AudioDocumentSchema<{ name: string; _id: ObjectId }>>("owner");
 
     const audios = audiosList.map((audio) => {
       return {
