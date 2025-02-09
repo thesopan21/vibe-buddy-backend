@@ -123,3 +123,21 @@ export const updateFollowers = async (
     });
   }
 };
+
+/**
+ *
+ */
+export const getUploadedAudio = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    res.json({
+      messge: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
