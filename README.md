@@ -1,6 +1,62 @@
-# Production Ready Setup (NodeJs and Typescript)
+# 🎧 Vibe Buddy Backend
 
-Setting up a production-ready backend with Node.js and TypeScript involves several steps to ensure scalability, maintainability, and security.
+The Vibe Buddy Backend is a scalable and high-performance backend built with Node.js, Express, and TypeScript. It powers the Vibe Buddy podcast listening platform, handling user authentication, podcast streaming, playlist management, and analytics.
+
+## 🚀 Key Features
+1️⃣ User Authentication & Security
+
+- JWT Authentication – Secure login and session management.
+- Role-Based Access Control (RBAC) – Different permissions for listeners, creators, and admins.
+- OAuth Integration – Supports Google/Facebook login (working on it).
+
+2️⃣ Podcast & Audio Streaming
+- Podcast Upload & Management – Allows creators to upload episodes with metadata.
+- Adaptive Bitrate Streaming – Ensures smooth audio playback based on network conditions.
+- Resume Listening – Saves playback progress for users.
+
+3️⃣ Playlist & Favorites
+- User Playlists – Users can create, edit, and share playlists.
+- Favorites & Likes – Allows users to like and save episodes.
+- Recently Played – Tracks listening history.
+
+4️⃣ Notifications & Engagement (upcoming feature)
+- Push Notifications – New episode alerts, creator updates.
+- Comments & Reviews – Users can rate and review podcasts.
+- Follow Creators – Get updates from favorite podcasters.
+
+5️⃣ Performance & Optimization (upcoming feature)
+- Caching with Redis – Faster API responses.
+- MongoDB with Indexing – Optimized queries for large datasets.
+- Rate Limiting – Prevents abuse of API requests.
+
+6️⃣ Analytics & Insights (upcoming feature)
+- Listener Stats – Track engagement, most played episodes.
+- Ad Monetization – Tracks ad impressions and revenue.
+- Admin Dashboard – View platform analytics.
+
+## Folder Structure
+
+```
+backend-project-name/
+├── src/
+│   ├── config/
+│   │   └── environment.ts
+│   ├── controllers/
+│   │   └── exampleController.ts
+│   ├── middlewares/
+│   │   └── logger.ts
+│   ├── models/
+│   │   └── exampleModel.ts
+│   ├── routes/
+│   │   └── index.ts
+│   ├── services/
+│   │   └── exampleService.ts
+│   ├── app.ts
+│   └── server.ts
+├── tsconfig.json
+├── package.json
+└── .env
+```
 
 ### 1. Initialize the Node Project `package.json`
 
@@ -97,7 +153,7 @@ npm install helmet cors
   npm i --save-dev @types/cors @types/helmet
 ```
 
-### 9. Database Integration
+### 9. Database Installation
 
 ```bash
 npm install mongoose
@@ -137,134 +193,4 @@ npm run build
 
 ```bash
 npm start
-```
-
-## Folder Structure
-
-```
-backend-project-name/
-├── src/
-│   ├── config/
-│   │   └── environment.ts
-│   ├── controllers/
-│   │   └── exampleController.ts
-│   ├── middlewares/
-│   │   └── logger.ts
-│   ├── models/
-│   │   └── exampleModel.ts
-│   ├── routes/
-│   │   └── index.ts
-│   ├── services/
-│   │   └── exampleService.ts
-│   ├── app.ts
-│   └── server.ts
-├── tsconfig.json
-├── package.json
-└── .env
-```
-
-## Basic Setup
-
-- [app.ts](#app)
-- [server.ts](#server)
-- [config/environment.ts](#environment)
-- [routes/routes.ts](#routes)
-- [controllers/controller.ts](#contrller)
-- [middleware/logger.ts](#logger)
-- [models/mongodb.ts](#database)
-
-### app
-
-```bash
-import express from 'express';
-import routes from './routes';
-import helmet from 'helmet';
-import cors from 'cors';
-
-app.use(helmet());
-app.use(cors());
-
-const app = express();
-
-app.use(express.json());
-app.use('/api', routes);
-
-export default app;
-```
-
-### server
-
-```bash
-import app from './app';
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-```
-
-### environment
-
-```bash
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-export const ENV = {
-  PORT: process.env.PORT || 3000,
-  DB_URI: process.env.DB_URI || '',
-};
-```
-
-### routes
-
-```bash
-import { Router } from 'express';
-import { exampleController } from '../controllers/exampleController';
-
-const router = Router();
-
-router.get('/example', exampleController);
-
-export default router;
-```
-
-### contrller
-
-```bash
-import { Request, Response } from 'express';
-
-export const exampleController = (req: Request, res: Response) => {
-  res.json({ message: 'Hello, Production!' });
-};
-```
-
-### logger
-
-```bash
-import morgan from 'morgan';
-import { Application } from 'express';
-
-export const setupLogging = (app: Application) => {
-  app.use(morgan('combined'));
-};
-```
-
-### database
-
-```bash
-import mongoose, { Schema, Document } from 'mongoose';
-
-export interface IExample extends Document {
-  name: string;
-  value: number;
-}
-
-const ExampleSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  value: { type: Number, required: true },
-});
-
-export default mongoose.model<IExample>('Example', ExampleSchema);
 ```
