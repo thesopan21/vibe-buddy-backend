@@ -7,6 +7,7 @@ import audioRoutes from "./routes/audioRoutes";
 import favoriteRoutes from "./routes/favoriteRoutes";
 import playlistRouter from "./routes/playlistRoutes";
 import profileRoutes from "./routes/profileRutes";
+import historyRoutes from "./routes/historyRoutes";
 
 const app = express();
 
@@ -32,5 +33,8 @@ app.use('/api/v1/playlist', playlistRouter)
 
 // profile routes
 app.use('/api/v1/profile', profileRoutes)
+
+// history routes
+app.use('/api/v1/history', historyRoutes)
 
 export default app;
